@@ -13,6 +13,50 @@ import { manager } from "@/core/manager";
 import type { WidgetProps } from "./WidgetRegistry";
 import { cn } from "@/utils/cn";
 
+function Equalizer({ playing }: { playing: boolean }) {
+  const bars = [
+    { delay: "0s", height: "60%", activeHeight: "90%" },
+    { delay: "0.15s", height: "40%", activeHeight: "65%" },
+    { delay: "0.3s", height: "70%", activeHeight: "100%" },
+    { delay: "0.1s", height: "50%", activeHeight: "80%" },
+    { delay: "0.25s", height: "35%", activeHeight: "55%" },
+    { delay: "0.05s", height: "55%", activeHeight: "75%" },
+    { delay: "0.2s", height: "45%", activeHeight: "95%" },
+    { delay: "0.35s", height: "60%", activeHeight: "70%" },
+    { delay: "0.12s", height: "30%", activeHeight: "85%" },
+  ];
+
+  return (
+    <div className="flex h-10 items-end justify-center gap-[3px]">
+      {bars.map((bar, i) => (
+        <div
+          key={i}
+          className={cn(
+            "w-[3px] rounded-full",
+            playing ? "bg-brand" : "bg-muted-dark",
+          )}
+          style={{
+            height: playing ? bar.activeHeight : bar.height,
+            animation: playing
+              ? `eq-${i} ${0.8 + (i % 3) * 0.3}s ease-in-out ${bar.delay} infinite alternate`
+              : "none",
+            transition: playing ? "none" : "height 0.5s ease",
+          }}
+        />
+      ))}
+      <style>{`
+        ${bars.map((bar, i) => `
+          @keyframes eq-${i} {
+            0% { height: 12%; }
+            50% { height: ${bar.activeHeight}; }
+            100% { height: ${parseInt(bar.activeHeight) * 0.4}%; }
+          }
+        `).join("")}
+      `}</style>
+    </div>
+  );
+}
+
 export function SpeakerWidget({ device }: WidgetProps) {
   const track = device.capabilities.find((c) => c.id === "speaker_track");
   const artist = device.capabilities.find((c) => c.id === "speaker_artist");
@@ -43,7 +87,7 @@ export function SpeakerWidget({ device }: WidgetProps) {
       indicator={isPlaying ? "on" : "off"}
     >
       {/* Now playing */}
-      <div className="mb-2 min-h-[36px]">
+      <div className="mb-1">
         <p
           className={cn(
             "truncate text-sm font-medium",
@@ -60,15 +104,20 @@ export function SpeakerWidget({ device }: WidgetProps) {
         )}
       </div>
 
+      {/* Equalizer visualization */}
+      <div className="mb-1">
+        <Equalizer playing={isPlaying} />
+      </div>
+
       {/* Playback controls */}
-      <div className="mb-3 flex items-center justify-center gap-3">
+      <div className="mb-2 flex items-center justify-center gap-3">
         <button
           type="button"
           disabled={!device.online}
           onClick={() => send("speaker_prev", true)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface-light hover:text-white/80 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface-light hover:text-white/80 active:scale-95"
         >
-          <SkipBack size={16} fill="currentColor" />
+          <SkipBack size={14} fill="currentColor" />
         </button>
 
         <button
@@ -76,16 +125,16 @@ export function SpeakerWidget({ device }: WidgetProps) {
           disabled={!device.online}
           onClick={() => setPlaying(!isPlaying)}
           className={cn(
-            "flex h-12 w-12 items-center justify-center rounded-2xl transition-all active:scale-95",
+            "flex h-11 w-11 items-center justify-center rounded-2xl transition-all active:scale-95",
             isPlaying
               ? "bg-brand/15 text-brand"
               : "bg-white/[0.06] text-white/70 hover:bg-white/[0.1]",
           )}
         >
           {isPlaying ? (
-            <Pause size={20} fill="currentColor" />
+            <Pause size={18} fill="currentColor" />
           ) : (
-            <Play size={20} fill="currentColor" className="ml-0.5" />
+            <Play size={18} fill="currentColor" className="ml-0.5" />
           )}
         </button>
 
@@ -93,9 +142,9 @@ export function SpeakerWidget({ device }: WidgetProps) {
           type="button"
           disabled={!device.online}
           onClick={() => send("speaker_next", true)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface-light hover:text-white/80 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface-light hover:text-white/80 active:scale-95"
         >
-          <SkipForward size={16} fill="currentColor" />
+          <SkipForward size={14} fill="currentColor" />
         </button>
       </div>
 

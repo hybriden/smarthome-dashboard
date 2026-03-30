@@ -1,37 +1,34 @@
-import { ShieldAlert } from "lucide-react";
 import { WidgetWrapper } from "./WidgetWrapper";
-import { StatusDot } from "@/components/controls/StatusDot";
+import { AlarmIllustration } from "@/components/illustrations/DeviceIllustrations";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function AlarmWidget({ device }: WidgetProps) {
-  const alarmCaps = device.capabilities.filter((c) =>
-    c.id.startsWith("alarm_"),
-  );
+  const alarmCaps = device.capabilities.filter((c) => c.id.startsWith("alarm_"));
   const anyActive = alarmCaps.some((c) => c.value === true);
 
   return (
     <WidgetWrapper
       title={device.name}
+      subtitle={anyActive ? "Triggered" : "All clear"}
       online={device.online}
-      icon={
-        <ShieldAlert
-          size={18}
-          className={anyActive ? "text-accent-danger" : ""}
-        />
-      }
+      indicator={anyActive ? "alarm" : "on"}
     >
-      <div className="space-y-2">
+      <div className="flex flex-1 items-center justify-center">
+        <AlarmIllustration className="h-20 w-20" triggered={anyActive} />
+      </div>
+      <div className="mt-2 space-y-1.5">
         {alarmCaps.map((cap) => (
           <div key={cap.id} className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">{cap.title}</span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">
-                {cap.value ? "Triggered" : "Clear"}
-              </span>
-              <StatusDot
-                status={cap.value ? "alarm" : "online"}
-              />
-            </div>
+            <span className="text-xs text-muted">{cap.title}</span>
+            <span
+              className={
+                cap.value
+                  ? "text-xs font-medium text-brand-danger"
+                  : "text-xs text-brand-success/70"
+              }
+            >
+              {cap.value ? "Active" : "Clear"}
+            </span>
           </div>
         ))}
       </div>

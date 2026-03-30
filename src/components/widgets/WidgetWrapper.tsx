@@ -1,38 +1,52 @@
 import type { ReactNode } from "react";
 import { cn } from "@/utils/cn";
-import { StatusDot } from "@/components/controls/StatusDot";
 
 interface WidgetWrapperProps {
   title: string;
+  subtitle?: string;
   online: boolean;
-  icon?: ReactNode;
+  indicator?: "on" | "off" | "alarm";
   children: ReactNode;
   className?: string;
 }
 
 export function WidgetWrapper({
   title,
+  subtitle,
   online,
-  icon,
+  indicator,
   children,
   className,
 }: WidgetWrapperProps) {
   return (
     <div
       className={cn(
-        "flex h-full flex-col rounded-2xl bg-surface p-4 shadow-lg transition-shadow hover:shadow-xl",
-        !online && "opacity-60",
+        "widget-card flex h-full flex-col rounded-3xl border border-white/[0.06] bg-surface-card p-5",
+        !online && "opacity-50",
         className,
       )}
     >
-      <div className="mb-3 flex items-center gap-2">
-        {icon && <span className="text-gray-400">{icon}</span>}
-        <h3 className="flex-1 truncate text-sm font-medium text-gray-300">
-          {title}
-        </h3>
-        <StatusDot status={online ? "online" : "offline"} />
+      <div className="mb-4 flex items-start justify-between">
+        <div className="min-w-0">
+          <h3 className="truncate text-[15px] font-semibold text-white/90">
+            {title}
+          </h3>
+          {subtitle && (
+            <p className="mt-0.5 text-xs text-muted">{subtitle}</p>
+          )}
+        </div>
+        {indicator && (
+          <span
+            className={cn(
+              "mt-1 h-2.5 w-2.5 shrink-0 rounded-full",
+              indicator === "on" && "bg-brand shadow-[0_0_8px_rgba(200,148,62,0.4)]",
+              indicator === "off" && "bg-muted-dark",
+              indicator === "alarm" && "animate-pulse bg-brand-danger shadow-[0_0_8px_rgba(217,83,79,0.4)]",
+            )}
+          />
+        )}
       </div>
-      <div className="flex flex-1 flex-col justify-center">{children}</div>
+      <div className="flex flex-1 flex-col">{children}</div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { Lightbulb } from "lucide-react";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Toggle } from "@/components/controls/Toggle";
 import { Slider } from "@/components/controls/Slider";
+import { LampIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
@@ -10,38 +10,68 @@ export function LightWidget({ device }: WidgetProps) {
   const { capability: dim, setValue: setDim } = useCapability(device, "dim");
 
   const isOn = onoff?.value === true;
+  const brightness = dim ? Math.round((dim.value as number) * 100) : 0;
 
   return (
     <WidgetWrapper
       title={device.name}
+      subtitle={isOn ? `${brightness}% brightness` : "Off"}
       online={device.online}
-      icon={<Lightbulb size={18} className={isOn ? "text-accent-warm" : ""} />}
+      indicator={isOn ? "on" : "off"}
     >
-      <div className="flex items-center justify-between">
-        {dim && (
-          <span className="text-2xl font-bold tabular-nums">
-            {Math.round((dim.value as number) * 100)}%
-          </span>
-        )}
-        {onoff && (
-          <Toggle
-            checked={isOn}
-            onChange={(v) => setOnOff(v)}
-            disabled={!device.online}
-          />
-        )}
+      <div className="flex flex-1 items-center justify-center">
+        <LampIllustration className="h-20 w-20" glow={isOn} />
       </div>
-      {dim && isOn && (
-        <Slider
-          value={dim.value as number}
-          min={0}
-          max={1}
-          step={0.01}
-          onChange={setDim}
-          disabled={!device.online}
-          className="mt-3"
-        />
-      )}
+      <div className="mt-3 space-y-3">
+        {dim && isOn && (
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-surface-dark/60 p-1.5">
+              <svg viewBox="0 0 16 16" fill="none" className="h-4 w-4">
+                <circle cx="8" cy="8" r="4" fill="#c8943e" opacity="0.6" />
+                {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+                  const r = (angle * Math.PI) / 180;
+                  return (
+                    <line
+                      key={angle}
+                      x1={8 + 5.5 * Math.cos(r)}
+                      y1={8 + 5.5 * Math.sin(r)}
+                      x2={8 + 7 * Math.cos(r)}
+                      y2={8 + 7 * Math.sin(r)}
+                      stroke="#c8943e"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      opacity="0.5"
+                    />
+                  );
+                })}
+              </svg>
+            </div>
+            <Slider
+              value={dim.value as number}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={setDim}
+              disabled={!device.online}
+              className="flex-1"
+            />
+            <span className="min-w-[2.5rem] text-right text-sm font-medium text-white/70">
+              {brightness}%
+            </span>
+          </div>
+        )}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted">Power</span>
+          {onoff && (
+            <Toggle
+              checked={isOn}
+              onChange={(v) => setOnOff(v)}
+              disabled={!device.online}
+              size="sm"
+            />
+          )}
+        </div>
+      </div>
     </WidgetWrapper>
   );
 }

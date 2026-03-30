@@ -1,39 +1,39 @@
-import { Blinds } from "lucide-react";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Slider } from "@/components/controls/Slider";
+import { BlindsIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function CoverWidget({ device }: WidgetProps) {
-  const { capability: pos, setValue: setPos } = useCapability(
-    device,
-    "windowcoverings_set",
-  );
+  const { capability: pos, setValue: setPos } = useCapability(device, "windowcoverings_set");
+  const percent = pos ? Math.round((pos.value as number) * 100) : 0;
 
   return (
     <WidgetWrapper
       title={device.name}
+      subtitle={`${percent}% closed`}
       online={device.online}
-      icon={<Blinds size={18} />}
+      indicator="on"
     >
+      <div className="flex flex-1 items-center justify-center">
+        <BlindsIllustration className="h-20 w-20" openPercent={percent} />
+      </div>
       {pos && (
-        <>
-          <div className="mb-2 text-center text-2xl font-bold tabular-nums">
-            {Math.round((pos.value as number) * 100)}%
+        <div className="mt-3">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-muted">Open</span>
+            <Slider
+              value={pos.value as number}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={setPos}
+              disabled={!device.online}
+              className="flex-1"
+            />
+            <span className="text-[10px] text-muted">Closed</span>
           </div>
-          <Slider
-            value={pos.value as number}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={setPos}
-            disabled={!device.online}
-          />
-          <div className="mt-1 flex justify-between text-xs text-gray-500">
-            <span>Open</span>
-            <span>Closed</span>
-          </div>
-        </>
+        </div>
       )}
     </WidgetWrapper>
   );

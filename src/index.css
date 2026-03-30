@@ -1,12 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply overscroll-none;
+    @apply overscroll-none font-sans;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    background: #0c0b0a;
+    color: #c2c2c2;
   }
 
   ::-webkit-scrollbar {
@@ -31,11 +35,57 @@
   scrollbar-width: none;
 }
 
-/* react-grid-layout overrides for dark theme */
+/* react-grid-layout overrides */
 .react-grid-item.react-grid-placeholder {
-  @apply rounded-2xl bg-accent/20 !important;
+  background: rgba(200, 148, 62, 0.15) !important;
+  border-radius: 1.25rem !important;
+  border: 1px dashed rgba(200, 148, 62, 0.3) !important;
 }
 
 .react-resizable-handle::after {
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(200, 148, 62, 0.25) !important;
+}
+
+/* Range slider styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c8943e;
+  border: 2px solid #8b6a2f;
+  box-shadow: 0 0 10px rgba(200, 148, 62, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c8943e;
+  border: 2px solid #8b6a2f;
+  box-shadow: 0 0 10px rgba(200, 148, 62, 0.3);
+  cursor: pointer;
+}
+
+/* Card glow on hover */
+.widget-card {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.widget-card:hover {
+  box-shadow: 0 0 30px rgba(200, 148, 62, 0.06);
 }

@@ -9,7 +9,7 @@ interface EnumPickerProps {
 
 export function EnumPicker({ options, value, onChange, disabled }: EnumPickerProps) {
   return (
-    <div className="flex gap-1 rounded-lg bg-surface-dark p-1">
+    <div className="flex gap-1 rounded-xl border border-white/[0.06] bg-surface-dark p-1">
       {options.map((opt) => (
         <button
           key={opt.id}
@@ -17,10 +17,10 @@ export function EnumPicker({ options, value, onChange, disabled }: EnumPickerPro
           disabled={disabled}
           onClick={() => onChange(opt.id)}
           className={cn(
-            "min-h-[36px] flex-1 rounded-md px-2 py-1 text-xs font-medium transition-colors",
+            "min-h-[32px] flex-1 rounded-lg px-2 py-1 text-xs font-medium transition-all duration-200",
             value === opt.id
-              ? "bg-accent text-white"
-              : "text-gray-400 hover:text-white",
+              ? "bg-brand/15 text-brand shadow-sm"
+              : "text-muted hover:text-white/70",
             disabled && "cursor-not-allowed opacity-50",
           )}
         >

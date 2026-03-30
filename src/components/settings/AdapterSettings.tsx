@@ -25,20 +25,20 @@ export function AdapterSettings({ registration }: AdapterSettingsProps) {
   const hasConfigFields = registration.configFields.length > 0;
 
   return (
-    <div className="rounded-xl border border-white/10 bg-surface p-3">
+    <div className="rounded-2xl border border-white/[0.06] bg-surface-card p-4">
       <div className="flex items-center gap-3">
         {hasConfigFields && (
           <button
             type="button"
             onClick={() => setExpanded(!expanded)}
-            className="text-gray-400"
+            className="text-muted"
           >
-            {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </button>
         )}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium">{registration.name}</span>
+            <span className="text-sm font-medium text-white/90">{registration.name}</span>
             <StatusDot status={connected ? "online" : "offline"} />
           </div>
         </div>
@@ -50,12 +50,12 @@ export function AdapterSettings({ registration }: AdapterSettingsProps) {
       </div>
 
       {expanded && hasConfigFields && (
-        <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
+        <div className="mt-4 space-y-3 border-t border-white/[0.06] pt-4">
           {registration.configFields.map((field) => (
             <div key={field.key}>
-              <label className="mb-1 block text-xs text-gray-400">
+              <label className="mb-1.5 block text-xs text-muted">
                 {field.label}
-                {field.required && <span className="text-accent-danger"> *</span>}
+                {field.required && <span className="text-brand-danger"> *</span>}
               </label>
               <input
                 type={field.type === "password" ? "password" : "text"}
@@ -68,8 +68,8 @@ export function AdapterSettings({ registration }: AdapterSettingsProps) {
                   })
                 }
                 className={cn(
-                  "w-full rounded-lg border border-white/10 bg-surface-dark px-3 py-2 text-sm",
-                  "placeholder-gray-600 focus:border-accent focus:outline-none",
+                  "w-full rounded-xl border border-white/[0.06] bg-surface-dark px-3 py-2.5 text-sm text-white/80",
+                  "placeholder-muted-dark/60 focus:border-brand/30 focus:outline-none focus:ring-1 focus:ring-brand/20",
                 )}
               />
             </div>

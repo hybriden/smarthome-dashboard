@@ -1,4 +1,4 @@
-import { Home, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { StatusDot } from "@/components/controls/StatusDot";
 import { useConnectionStore } from "@/store/connections";
 import { useSettingsStore } from "@/store/settings";
@@ -10,24 +10,35 @@ export function Header() {
   const connectedCount = Array.from(statuses.values()).filter(Boolean).length;
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
-      <div className="flex items-center gap-2">
-        <Home size={22} className="text-accent" />
-        <h1 className="text-lg font-semibold">Smarthome</h1>
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-white/[0.06] px-6">
+      <div className="flex items-center gap-3">
+        {/* Brand mark */}
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand/15">
+          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+            <path
+              d="M10 2L2 8.5V17a1 1 0 001 1h4.5v-5.5a1 1 0 011-1h3a1 1 0 011 1V18H17a1 1 0 001-1V8.5L10 2z"
+              fill="#c8943e"
+            />
+          </svg>
+        </div>
+        <h1 className="text-lg font-semibold tracking-tight text-white">
+          Smarthome
+        </h1>
       </div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1.5">
+
+      <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2">
           <StatusDot status={connectedCount > 0 ? "online" : "offline"} />
-          <span className="text-xs text-gray-400">
-            {connectedCount} source{connectedCount !== 1 && "s"}
+          <span className="text-xs text-muted">
+            {connectedCount} source{connectedCount !== 1 ? "s" : ""}
           </span>
         </div>
         <button
           type="button"
           onClick={() => setShowSettings(true)}
-          className="rounded-lg p-2 transition-colors hover:bg-surface-light active:bg-surface"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.06] transition-colors hover:border-white/10 hover:bg-surface-light active:scale-95"
         >
-          <Settings size={20} className="text-gray-400" />
+          <Settings size={16} className="text-muted" />
         </button>
       </div>
     </header>

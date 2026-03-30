@@ -228,3 +228,91 @@ export function EnergyIllustration({ className }: IllustrationProps) {
     </svg>
   );
 }
+
+export function GarageDoorIllustration({ className, open }: IllustrationProps & { open?: boolean }) {
+  const doorY = open ? 18 : 48;
+  const doorH = open ? 14 : 52;
+
+  return (
+    <svg viewBox="0 0 140 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Garage frame */}
+      <rect x="15" y="12" width="110" height="80" rx="4" fill="#1a1816" stroke="#2a2622" strokeWidth="1.5" />
+
+      {/* Interior / floor */}
+      <rect x="19" y="16" width="102" height="72" rx="2" fill="#0c0b0a" />
+
+      {/* Floor line */}
+      <line x1="19" y1="88" x2="121" y2="88" stroke="#2a2622" strokeWidth="1" />
+
+      {/* Car silhouette when open */}
+      {open && (
+        <g opacity="0.15">
+          <rect x="38" y="62" width="64" height="22" rx="4" fill="#4a4440" />
+          <rect x="42" y="56" width="56" height="10" rx="3" fill="#4a4440" />
+          {/* Wheels */}
+          <circle cx="48" cy="84" r="4" fill="#2a2622" />
+          <circle cx="92" cy="84" r="4" fill="#2a2622" />
+          {/* Headlights */}
+          <rect x="40" y="66" width="6" height="3" rx="1" fill={open ? "#c8943e" : "#2a2622"} opacity="0.4" />
+          <rect x="94" y="66" width="6" height="3" rx="1" fill={open ? "#c8943e" : "#2a2622"} opacity="0.4" />
+        </g>
+      )}
+
+      {/* Door panels - animated position */}
+      <g>
+        <rect
+          x="19"
+          y={doorY}
+          width="102"
+          height={doorH}
+          fill="#1e1c19"
+          stroke={open ? "#c8943e" : "#2a2622"}
+          strokeWidth="1"
+          rx="1"
+          style={{ transition: "y 0.4s ease, height 0.4s ease" }}
+        />
+        {/* Panel lines */}
+        {[0, 1, 2, 3].map((i) => {
+          const lineY = doorY + (doorH / 4) * (i + 0.5);
+          return (
+            <line
+              key={i}
+              x1="22"
+              y1={lineY}
+              x2="118"
+              y2={lineY}
+              stroke={open ? "#c8943e" : "#3a3632"}
+              strokeWidth="0.5"
+              opacity={open ? 0.3 : 0.6}
+              style={{ transition: "y1 0.4s ease, y2 0.4s ease" }}
+            />
+          );
+        })}
+        {/* Handle */}
+        <rect
+          x="64"
+          y={doorY + doorH - 8}
+          width="12"
+          height="3"
+          rx="1.5"
+          fill={open ? "#c8943e" : "#4a4440"}
+          opacity={open ? 0.6 : 0.8}
+        />
+      </g>
+
+      {/* Side rails */}
+      <line x1="19" y1="12" x2="19" y2="92" stroke="#2a2622" strokeWidth="2" />
+      <line x1="121" y1="12" x2="121" y2="92" stroke="#2a2622" strokeWidth="2" />
+
+      {/* Top rail */}
+      <rect x="15" y="10" width="110" height="5" rx="2" fill="#2a2622" />
+
+      {/* Status light */}
+      <circle cx="125" cy="14" r="2.5" fill={open ? "#c8943e" : "#5cb85c"} opacity="0.8">
+        {open && (
+          <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite" />
+        )}
+      </circle>
+    </svg>
+  );
+}

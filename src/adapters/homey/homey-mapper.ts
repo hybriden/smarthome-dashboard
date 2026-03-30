@@ -12,6 +12,7 @@ const CLASS_MAP: Record<string, DeviceClass> = {
   windowcoverings: "windowcoverings",
   camera: "camera",
   homealarm: "alarm",
+  garagedoor: "garagedoor",
 };
 
 function resolveTitle(title: string | Record<string, string> | null | undefined): string {
@@ -53,8 +54,16 @@ function mapCapability(raw: {
   };
 }
 
+const GARAGE_DOOR_PATTERNS = [
+  /garasjeport/i,
+  /garage\s*door/i,
+  /garage\s*d[øo]r/i,
+  /portåpner/i,
+];
+
 function inferDeviceClass(
   homeyClass: string,
+  deviceName: string,
   capabilities: Capability[],
 ): DeviceClass {
   const mapped = CLASS_MAP[homeyClass];
@@ -71,6 +80,14 @@ function inferDeviceClass(
   const hasWindowCoverings = capabilities.some((c) =>
     c.id.startsWith("windowcoverings"),
   );
+
+  // Garage door detection: name-based + has relay outputs
+  if (
+    hasSettableOnoff &&
+    GARAGE_DOOR_PATTERNS.some((p) => p.test(deviceName))
+  ) {
+    return "garagedoor";
+  }
 
   if (hasTargetTemp) return "thermostat";
   if (hasDim && hasSettableOnoff) return "light";
@@ -90,7 +107,7 @@ export function mapHomeyDevice(raw: HomeyRawDevice): Device {
     sourceId: "homey",
     name: raw.name,
     zone: raw.zone,
-    deviceClass: inferDeviceClass(raw.class, capabilities),
+    deviceClass: inferDeviceClass(raw.class, raw.name, capabilities),
     online: raw.available ?? true,
     capabilities,
   };

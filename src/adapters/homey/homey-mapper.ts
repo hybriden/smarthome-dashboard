@@ -14,30 +14,31 @@ const CLASS_MAP: Record<string, DeviceClass> = {
   homealarm: "alarm",
 };
 
-function resolveTitle(title: string | Record<string, string>): string {
+function resolveTitle(title: string | Record<string, string> | null | undefined): string {
+  if (!title) return "";
   if (typeof title === "string") return title;
   return title["en"] ?? Object.values(title)[0] ?? "";
 }
 
 function mapCapability(raw: {
   id: string;
-  type: string;
-  title: string | Record<string, string>;
-  getable: boolean;
-  setable: boolean;
-  value: unknown;
+  type?: string;
+  title?: string | Record<string, string> | null;
+  getable?: boolean;
+  setable?: boolean;
+  value?: unknown;
   min?: number;
   max?: number;
   step?: number;
   units?: string;
-  values?: { id: string; title: string | Record<string, string> }[];
+  values?: { id: string; title: string | Record<string, string> | null }[];
 }): Capability {
   const meta = getCapabilityMeta(raw.id);
   return {
     id: raw.id,
-    type: raw.type as Capability["type"],
+    type: (raw.type as Capability["type"]) ?? "string",
     title: resolveTitle(raw.title) || meta.title,
-    value: raw.value,
+    value: raw.value ?? null,
     min: raw.min,
     max: raw.max,
     step: raw.step,
@@ -46,7 +47,7 @@ function mapCapability(raw: {
       id: v.id,
       title: resolveTitle(v.title),
     })),
-    settable: raw.setable,
+    settable: raw.setable ?? false,
   };
 }
 
@@ -57,8 +58,10 @@ export function mapHomeyDevice(raw: HomeyRawDevice): Device {
     name: raw.name,
     zone: raw.zone,
     deviceClass: CLASS_MAP[raw.class] ?? "other",
-    online: raw.available,
-    capabilities: Object.values(raw.capabilitiesObj).map(mapCapability),
+    online: raw.available ?? true,
+    capabilities: Object.values(raw.capabilitiesObj ?? {})
+      .filter(Boolean)
+      .map(mapCapability),
   };
 }
 

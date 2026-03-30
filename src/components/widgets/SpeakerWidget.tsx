@@ -13,46 +13,18 @@ import { manager } from "@/core/manager";
 import type { WidgetProps } from "./WidgetRegistry";
 import { cn } from "@/utils/cn";
 
-function Equalizer({ playing }: { playing: boolean }) {
-  const bars = [
-    { delay: "0s", height: "60%", activeHeight: "90%" },
-    { delay: "0.15s", height: "40%", activeHeight: "65%" },
-    { delay: "0.3s", height: "70%", activeHeight: "100%" },
-    { delay: "0.1s", height: "50%", activeHeight: "80%" },
-    { delay: "0.25s", height: "35%", activeHeight: "55%" },
-    { delay: "0.05s", height: "55%", activeHeight: "75%" },
-    { delay: "0.2s", height: "45%", activeHeight: "95%" },
-    { delay: "0.35s", height: "60%", activeHeight: "70%" },
-    { delay: "0.12s", height: "30%", activeHeight: "85%" },
-  ];
-
+function Equalizer() {
   return (
-    <div className="flex h-10 items-end justify-center gap-[3px]">
-      {bars.map((bar, i) => (
-        <div
-          key={i}
-          className={cn(
-            "w-[3px] rounded-full",
-            playing ? "bg-brand" : "bg-muted-dark",
-          )}
-          style={{
-            height: playing ? bar.activeHeight : bar.height,
-            animation: playing
-              ? `eq-${i} ${0.8 + (i % 3) * 0.3}s ease-in-out ${bar.delay} infinite alternate`
-              : "none",
-            transition: playing ? "none" : "height 0.5s ease",
-          }}
-        />
-      ))}
-      <style>{`
-        ${bars.map((bar, i) => `
-          @keyframes eq-${i} {
-            0% { height: 12%; }
-            50% { height: ${bar.activeHeight}; }
-            100% { height: ${parseInt(bar.activeHeight) * 0.4}%; }
-          }
-        `).join("")}
-      `}</style>
+    <div className="flex h-8 items-end justify-center gap-[3px]">
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.2s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.4s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.1s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.3s" }} />
+      <div className="eq-bar w-[3px] rounded-full opacity-70" style={{ animationDelay: "0.15s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.35s" }} />
+      <div className="eq-bar w-[3px] rounded-full opacity-70" style={{ animationDelay: "0.05s" }} />
+      <div className="eq-bar w-[3px] rounded-full" style={{ animationDelay: "0.25s" }} />
     </div>
   );
 }
@@ -104,10 +76,12 @@ export function SpeakerWidget({ device }: WidgetProps) {
         )}
       </div>
 
-      {/* Equalizer visualization */}
-      <div className="mb-1">
-        <Equalizer playing={isPlaying} />
-      </div>
+      {/* Equalizer visualization — only when playing */}
+      {isPlaying && (
+        <div className="mb-1">
+          <Equalizer />
+        </div>
+      )}
 
       {/* Playback controls */}
       <div className="mb-2 flex items-center justify-center gap-3">

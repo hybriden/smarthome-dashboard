@@ -126,25 +126,49 @@ export class HomeyAdapter implements DataSourceAdapter {
     this.handlers.forEach((h) => h(event));
   }
 
+  private refreshing: Promise<void> | null = null;
+
+  private async forceRefresh(): Promise<void> {
+    if (!this.auth) throw new Error("No auth data — please re-authenticate");
+    // Deduplicate concurrent refresh attempts
+    if (!this.refreshing) {
+      this.refreshing = (async () => {
+        try {
+          this.auth = await refreshHomeyToken(this.auth!);
+          this.token = this.auth.homeyToken;
+        } finally {
+          this.refreshing = null;
+        }
+      })();
+    }
+    await this.refreshing;
+  }
+
   private async ensureToken(): Promise<void> {
     if (this.auth && isTokenExpired(this.auth)) {
-      this.auth = await refreshHomeyToken(this.auth);
-      this.token = this.auth.homeyToken;
+      await this.forceRefresh();
     }
   }
 
   private async apiGet<T>(path: string): Promise<T> {
     await this.ensureToken();
-    const res = await fetch(`${this.baseUrl}${path}`, {
+    let res = await fetch(`${this.baseUrl}${path}`, {
       headers: { Authorization: `Bearer ${this.token}` },
     });
+    // Auto-refresh on 401
+    if (res.status === 401 && this.auth) {
+      await this.forceRefresh();
+      res = await fetch(`${this.baseUrl}${path}`, {
+        headers: { Authorization: `Bearer ${this.token}` },
+      });
+    }
     if (!res.ok) throw new Error(`Homey API ${res.status}: ${res.statusText}`);
     return res.json() as Promise<T>;
   }
 
   private async apiPut(path: string, body: unknown): Promise<void> {
     await this.ensureToken();
-    const res = await fetch(`${this.baseUrl}${path}`, {
+    let res = await fetch(`${this.baseUrl}${path}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${this.token}`,
@@ -152,6 +176,18 @@ export class HomeyAdapter implements DataSourceAdapter {
       },
       body: JSON.stringify(body),
     });
+    // Auto-refresh on 401
+    if (res.status === 401 && this.auth) {
+      await this.forceRefresh();
+      res = await fetch(`${this.baseUrl}${path}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    }
     if (!res.ok) throw new Error(`Homey API ${res.status}: ${res.statusText}`);
   }
 

@@ -219,12 +219,15 @@ export async function refreshHomeyToken(
         },
       );
       if (sessionRes.ok) {
-        const sessionData = await sessionRes.json();
-        homeyToken = sessionData.token as string;
+        homeyToken = await sessionRes.json() as string;
+      } else {
+        console.warn("Refresh: local session failed", await sessionRes.text());
       }
+    } else {
+      console.warn("Refresh: delegation failed", await delegRes.text());
     }
-  } catch {
-    // Keep existing homey token
+  } catch (err) {
+    console.warn("Refresh: re-delegation error, keeping existing token", err);
   }
 
   const updated: HomeyAuthData = {

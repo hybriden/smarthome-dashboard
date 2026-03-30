@@ -3,14 +3,15 @@ import { Toggle } from "@/components/controls/Toggle";
 import { Slider } from "@/components/controls/Slider";
 import { LampIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
+import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function LightWidget({ device }: WidgetProps) {
   const { capability: onoff, setValue: setOnOff } = useCapability(device, "onoff");
-  const { capability: dim, setValue: setDim } = useCapability(device, "dim");
+  const { capability: dim, value: dimValue, setValue: setDim } = useDebouncedCapability(device, "dim");
 
   const isOn = onoff?.value === true;
-  const brightness = dim ? Math.round((dim.value as number) * 100) : 0;
+  const brightness = dim ? Math.round((dimValue as number) * 100) : 0;
 
   return (
     <WidgetWrapper
@@ -24,7 +25,7 @@ export function LightWidget({ device }: WidgetProps) {
       </div>
       <div className="mt-3 space-y-3">
         {dim && isOn && (
-          <div className="flex items-center gap-3">
+          <div className="no-drag flex items-center gap-3">
             <div className="rounded-lg bg-surface-dark/60 p-1.5">
               <svg viewBox="0 0 16 16" fill="none" className="h-4 w-4">
                 <circle cx="8" cy="8" r="4" fill="#c8943e" opacity="0.6" />
@@ -47,7 +48,7 @@ export function LightWidget({ device }: WidgetProps) {
               </svg>
             </div>
             <Slider
-              value={dim.value as number}
+              value={dimValue as number}
               min={0}
               max={1}
               step={0.01}

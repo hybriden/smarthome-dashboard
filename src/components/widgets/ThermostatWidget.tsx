@@ -3,15 +3,16 @@ import { Slider } from "@/components/controls/Slider";
 import { EnumPicker } from "@/components/controls/EnumPicker";
 import { ThermostatIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
+import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function ThermostatWidget({ device }: WidgetProps) {
   const { capability: temp } = useCapability(device, "measure_temperature");
-  const { capability: target, setValue: setTarget } = useCapability(device, "target_temperature");
+  const { capability: target, value: targetValue, setValue: setTarget } = useDebouncedCapability(device, "target_temperature", 500);
   const { capability: mode, setValue: setMode } = useCapability(device, "thermostat_mode");
 
   const currentTemp = temp?.value as number | undefined;
-  const targetTemp = target?.value as number | undefined;
+  const targetTemp = targetValue as number | undefined;
 
   return (
     <WidgetWrapper
@@ -43,12 +44,12 @@ export function ThermostatWidget({ device }: WidgetProps) {
         )}
       </div>
 
-      <div className="mt-3 space-y-3">
+      <div className="no-drag mt-3 space-y-3">
         {target && (
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted">{target.min ?? 5}°</span>
             <Slider
-              value={target.value as number}
+              value={targetValue as number}
               min={target.min ?? 5}
               max={target.max ?? 30}
               step={target.step ?? 0.5}

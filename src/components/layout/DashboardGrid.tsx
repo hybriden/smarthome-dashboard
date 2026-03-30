@@ -103,6 +103,7 @@ export function DashboardGrid() {
         isDraggable
         isResizable
         compactType="vertical"
+        draggableCancel="input, button, [role='switch'], .no-drag"
         onLayoutChange={onLayoutChange}
       >
         {devices.map((device) => {

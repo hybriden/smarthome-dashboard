@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { X, ChevronRight, Plus, Check, Home } from "lucide-react";
+import { X, ChevronRight, Plus, Check, Home, Lightbulb } from "lucide-react";
 import { useDeviceStore } from "@/store/devices";
 import { useZoneStore } from "@/store/zones";
 import { usePinnedDevicesStore } from "@/store/pinnedDevices";
@@ -178,6 +178,9 @@ function PickerContent() {
           </div>
         )}
 
+        {/* Zone control — offer "Lights control" for zones with lights */}
+        {currentZone && <ZoneControlRow zoneId={currentZone} allDevices={allDevices} allZones={allZones} />}
+
         {/* Devices */}
         {zoneDevices.length > 0 && (
           <div>
@@ -198,6 +201,86 @@ function PickerContent() {
             <p className="text-sm">No devices in this room</p>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function ZoneControlRow({
+  zoneId,
+  allDevices,
+  allZones,
+}: {
+  zoneId: string;
+  allDevices: Device[];
+  allZones: Zone[];
+}) {
+  const addDevice = usePinnedDevicesStore((s) => s.addDevice);
+  const removeDevice = usePinnedDevicesStore((s) => s.removeDevice);
+  const isPinned = usePinnedDevicesStore((s) => s.isPinned);
+
+  // Find sourceId from any device in this zone
+  const sourceId = allDevices.find((d) => d.zone === zoneId)?.sourceId ?? "homey";
+
+  // Check if zone (including children) has any lights
+  const zoneIds = new Set<string>();
+  zoneIds.add(zoneId);
+  function addChildren(parentId: string) {
+    for (const z of allZones) {
+      if (z.parentId === parentId && !zoneIds.has(z.id)) {
+        zoneIds.add(z.id);
+        addChildren(z.id);
+      }
+    }
+  }
+  addChildren(zoneId);
+
+  const lightCount = allDevices.filter(
+    (d) => d.zone && zoneIds.has(d.zone) && d.capabilities.some((c) => c.id === "onoff" && c.settable),
+  ).length;
+
+  if (lightCount === 0) return null;
+
+  const zoneKey = `zone:${sourceId}:${zoneId}`;
+  const pinned = isPinned(zoneKey);
+  const zone = allZones.find((z) => z.id === zoneId);
+
+  return (
+    <div className="mb-3">
+      <span className="mb-1.5 block px-2 text-[10px] font-medium uppercase tracking-wider text-muted-dark">
+        Zone Controls
+      </span>
+      <div
+        className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-surface-light"
+      >
+        <div
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-lg",
+            pinned ? "bg-brand/15" : "bg-brand/10",
+          )}
+        >
+          <Lightbulb size={14} className="text-brand" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <span className="text-sm font-medium text-white/90">
+            {zone?.name ?? "Zone"} — Lights
+          </span>
+          <p className="text-[11px] text-muted-dark">
+            All on / all off for {lightCount} light{lightCount !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => (pinned ? removeDevice(zoneKey) : addDevice(zoneKey))}
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-lg transition-all",
+            pinned
+              ? "bg-brand/15 text-brand"
+              : "border border-white/[0.08] text-muted hover:border-brand/30 hover:text-brand",
+          )}
+        >
+          {pinned ? <Check size={14} /> : <Plus size={14} />}
+        </button>
       </div>
     </div>
   );

@@ -7,12 +7,18 @@ import { useDeviceStore } from "@/store/devices";
 import { usePinnedDevicesStore } from "@/store/pinnedDevices";
 import { useDashboardStore } from "@/store/dashboard";
 import { getWidgetComponent } from "@/components/widgets/WidgetRegistry";
+import { ZoneControlWidget } from "@/components/widgets/ZoneControlWidget";
 import type { Device } from "@/core/types";
 
 const ResponsiveGrid = WidthProvider(Responsive);
 
-function widgetSize(device: Device): { w: number; h: number } {
-  switch (device.deviceClass) {
+type PinnedItem =
+  | { type: "device"; key: string; device: Device }
+  | { type: "zone"; key: string };
+
+function widgetSize(item: PinnedItem): { w: number; h: number } {
+  if (item.type === "zone") return { w: 1, h: 2 };
+  switch (item.device.deviceClass) {
     case "thermostat":
       return { w: 2, h: 2 };
     case "light":
@@ -34,13 +40,18 @@ export function DashboardGrid() {
   const savedLayouts = useDashboardStore((s) => s.layouts);
   const setLayouts = useDashboardStore((s) => s.setLayouts);
 
-  const devices = useMemo(
-    () =>
-      pinned
-        .map((key) => allDevices.get(key))
-        .filter((d): d is Device => d != null),
-    [pinned, allDevices],
-  );
+  const items = useMemo((): PinnedItem[] => {
+    const result: PinnedItem[] = [];
+    for (const key of pinned) {
+      if (key.startsWith("zone:")) {
+        result.push({ type: "zone", key });
+      } else {
+        const device = allDevices.get(key);
+        if (device) result.push({ type: "device", key, device });
+      }
+    }
+    return result;
+  }, [pinned, allDevices]);
 
   const layouts = useMemo(() => {
     const saved = new Map(savedLayouts.map((l) => [l.i, l]));
@@ -49,11 +60,10 @@ export function DashboardGrid() {
     let rowMaxH = 0;
     const cols = 6;
 
-    return devices.map((device): Layout => {
-      const key = `${device.sourceId}:${device.id}`;
-      const existing = saved.get(key);
+    return items.map((item): Layout => {
+      const existing = saved.get(item.key);
       if (existing) return existing;
-      const size = widgetSize(device);
+      const size = widgetSize(item);
 
       if (col + size.w > cols) {
         col = 0;
@@ -62,7 +72,7 @@ export function DashboardGrid() {
       }
 
       const layout: Layout = {
-        i: key,
+        i: item.key,
         x: col,
         y: row,
         w: size.w,
@@ -75,7 +85,7 @@ export function DashboardGrid() {
       rowMaxH = Math.max(rowMaxH, size.h);
       return layout;
     });
-  }, [devices, savedLayouts]);
+  }, [items, savedLayouts]);
 
   const onLayoutChange = useCallback(
     (_current: Layout[], allLayouts: { [key: string]: Layout[] }) => {
@@ -85,7 +95,7 @@ export function DashboardGrid() {
     [setLayouts],
   );
 
-  if (devices.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
@@ -122,15 +132,29 @@ export function DashboardGrid() {
         draggableCancel="input, button, [role='switch'], .no-drag"
         onLayoutChange={onLayoutChange}
       >
-        {devices.map((device) => {
-          const key = `${device.sourceId}:${device.id}`;
-          const Widget = getWidgetComponent(device.deviceClass);
+        {items.map((item) => {
+          if (item.type === "zone") {
+            return (
+              <div key={item.key} className="group relative">
+                <ZoneControlWidget zoneKey={item.key} />
+                <button
+                  type="button"
+                  onClick={() => removeDevice(item.key)}
+                  className="no-drag absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
+                >
+                  <Trash2 size={10} />
+                </button>
+              </div>
+            );
+          }
+
+          const Widget = getWidgetComponent(item.device.deviceClass);
           return (
-            <div key={key} className="group relative">
-              <Widget device={device} />
+            <div key={item.key} className="group relative">
+              <Widget device={item.device} />
               <button
                 type="button"
-                onClick={() => removeDevice(key)}
+                onClick={() => removeDevice(item.key)}
                 className="no-drag absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
               >
                 <Trash2 size={10} />

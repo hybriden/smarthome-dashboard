@@ -61,6 +61,13 @@ const GARAGE_DOOR_PATTERNS = [
   /portåpner/i,
 ];
 
+const SOLAR_PATTERNS = [
+  /solcelle/i,
+  /solar/i,
+  /photovoltaic/i,
+  /pv\s*panel/i,
+];
+
 function inferDeviceClass(
   homeyClass: string,
   deviceName: string,
@@ -87,6 +94,12 @@ function inferDeviceClass(
     GARAGE_DOOR_PATTERNS.some((p) => p.test(deviceName))
   ) {
     return "garagedoor";
+  }
+
+  // Solar panel detection: name-based + has meter_power
+  const hasMeterPower = capabilities.some((c) => c.id.startsWith("meter_power"));
+  if (hasMeterPower && SOLAR_PATTERNS.some((p) => p.test(deviceName))) {
+    return "solar";
   }
 
   if (hasTargetTemp) return "thermostat";

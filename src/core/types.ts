@@ -32,6 +32,7 @@ export type DeviceClass =
   | "camera"
   | "alarm"
   | "garagedoor"
+  | "solar"
   | "other";
 
 export interface Zone {

@@ -43,7 +43,7 @@ export function SpeakerWidget({ device }: WidgetProps) {
       indicator={isPlaying ? "on" : "off"}
     >
       {/* Now playing */}
-      <div className="mb-3 min-h-[40px]">
+      <div className="mb-2 min-h-[36px]">
         <p
           className={cn(
             "truncate text-sm font-medium",
@@ -61,7 +61,7 @@ export function SpeakerWidget({ device }: WidgetProps) {
       </div>
 
       {/* Playback controls */}
-      <div className="mb-4 flex items-center justify-center gap-3">
+      <div className="mb-3 flex items-center justify-center gap-3">
         <button
           type="button"
           disabled={!device.online}

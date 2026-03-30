@@ -130,36 +130,36 @@ export function SolarWidget({ device }: WidgetProps) {
       indicator={producing ? "on" : "off"}
     >
       {/* Illustration */}
-      <div className="mb-3 h-24">
+      <div className="mb-2 flex-1 min-h-0">
         <SolarIllustration watts={watts} />
       </div>
 
-      {/* Current power */}
-      <div className="mb-3 text-center">
-        <span className={`text-2xl font-bold tabular-nums ${producing ? "text-brand" : "text-muted"}`}>
-          {watts >= 1000 ? `${(watts / 1000).toFixed(1)}` : watts.toFixed(0)}
-        </span>
-        <span className={`ml-1 text-sm ${producing ? "text-brand-dim" : "text-muted-dark"}`}>
-          {watts >= 1000 ? "kW" : "W"}
-        </span>
-      </div>
-
-      {/* Stats */}
-      <div className="flex justify-between rounded-xl bg-surface-dark/50 px-3 py-2">
-        <div className="text-center">
-          <span className="block text-xs font-medium tabular-nums text-white/80">
-            {todayKwh.toFixed(1)}
+      {/* Current power + stats */}
+      <div className="mt-auto">
+        <div className="mb-1.5 text-center">
+          <span className={`text-xl font-bold tabular-nums ${producing ? "text-brand" : "text-muted"}`}>
+            {watts >= 1000 ? `${(watts / 1000).toFixed(1)}` : watts.toFixed(0)}
           </span>
-          <span className="text-[10px] text-muted">kWh today</span>
+          <span className={`ml-1 text-xs ${producing ? "text-brand-dim" : "text-muted-dark"}`}>
+            {watts >= 1000 ? "kW" : "W"}
+          </span>
         </div>
-        <div className="h-auto w-px bg-white/[0.06]" />
-        <div className="text-center">
-          <span className="block text-xs font-medium tabular-nums text-white/80">
-            {lifetimeKwh >= 1000 ? `${(lifetimeKwh / 1000).toFixed(1)}` : lifetimeKwh.toFixed(0)}
-          </span>
-          <span className="text-[10px] text-muted">
-            {lifetimeKwh >= 1000 ? "MWh total" : "kWh total"}
-          </span>
+        <div className="flex justify-between rounded-lg bg-surface-dark/50 px-3 py-1.5">
+          <div className="text-center">
+            <span className="block text-[11px] font-medium tabular-nums text-white/80">
+              {todayKwh.toFixed(1)}
+            </span>
+            <span className="text-[9px] text-muted">kWh today</span>
+          </div>
+          <div className="h-auto w-px bg-white/[0.06]" />
+          <div className="text-center">
+            <span className="block text-[11px] font-medium tabular-nums text-white/80">
+              {lifetimeKwh >= 1000 ? `${(lifetimeKwh / 1000).toFixed(1)}` : lifetimeKwh.toFixed(0)}
+            </span>
+            <span className="text-[9px] text-muted">
+              {lifetimeKwh >= 1000 ? "MWh total" : "kWh total"}
+            </span>
+          </div>
         </div>
       </div>
     </WidgetWrapper>

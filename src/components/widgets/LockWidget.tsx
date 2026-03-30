@@ -134,7 +134,7 @@ export function LockWidget({ device }: WidgetProps) {
     >
       <div className="flex flex-1 items-center gap-4">
         {/* Lock illustration */}
-        <div className="h-28 w-20 shrink-0">
+        <div className="h-24 w-16 shrink-0">
           <LockIllustration state={lockState} />
         </div>
 

@@ -21,12 +21,12 @@ export function WidgetWrapper({
   return (
     <div
       className={cn(
-        "widget-card relative flex h-full flex-col rounded-3xl border border-white/[0.06] bg-surface-card p-5",
+        "widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-4",
         !online && "opacity-50",
         className,
       )}
     >
-      <div className="mb-4 flex items-start justify-between">
+      <div className="mb-2 flex items-start justify-between">
         <div className="min-w-0">
           <h3 className="truncate text-[15px] font-semibold text-white/90">
             {title}

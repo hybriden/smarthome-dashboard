@@ -20,11 +20,19 @@ function widgetSize(item: PinnedItem): { w: number; h: number } {
   if (item.type === "zone") return { w: 1, h: 2 };
   switch (item.device.deviceClass) {
     case "thermostat":
-      return { w: 2, h: 2 };
+      return { w: 2, h: 3 };
+    case "speaker":
+      return { w: 1, h: 3 };
+    case "lock":
+      return { w: 1, h: 3 };
+    case "garagedoor":
+      return { w: 1, h: 3 };
+    case "solar":
+      return { w: 1, h: 3 };
     case "light":
       return { w: 1, h: 2 };
     case "sensor":
-      return { w: 1, h: 2 };
+      return { w: 2, h: 2 };
     case "alarm":
       return { w: 1, h: 2 };
     default:
@@ -123,7 +131,7 @@ export function DashboardGrid() {
         layouts={{ lg: layouts, md: layouts, sm: layouts }}
         breakpoints={{ lg: 1024, md: 768, sm: 0 }}
         cols={{ lg: 6, md: 4, sm: 2 }}
-        rowHeight={130}
+        rowHeight={100}
         margin={[14, 14]}
         containerPadding={[0, 0]}
         isDraggable

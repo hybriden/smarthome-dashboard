@@ -78,9 +78,9 @@ export function ZoneControlWidget({ zoneKey }: ZoneControlWidgetProps) {
   }
 
   return (
-    <div className="widget-card relative flex h-full flex-col rounded-3xl border border-white/[0.06] bg-surface-card p-5">
+    <div className="widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-4">
       {/* Header */}
-      <div className="mb-3">
+      <div className="mb-2">
         <h3 className="text-[15px] font-semibold text-white/90">
           {zone?.name ?? "Zone"}
         </h3>
@@ -90,7 +90,7 @@ export function ZoneControlWidget({ zoneKey }: ZoneControlWidgetProps) {
       </div>
 
       {/* Light status bar */}
-      <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-surface-dark">
+      <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-surface-dark">
         <div
           className="h-full rounded-full bg-brand transition-all duration-500"
           style={{ width: totalCount > 0 ? `${(onCount / totalCount) * 100}%` : "0%" }}

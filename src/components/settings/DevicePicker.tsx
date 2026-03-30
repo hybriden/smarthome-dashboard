@@ -236,7 +236,7 @@ function ZoneControlRow({
   addChildren(zoneId);
 
   const lightCount = allDevices.filter(
-    (d) => d.zone && zoneIds.has(d.zone) && d.capabilities.some((c) => c.id === "onoff" && c.settable),
+    (d) => d.zone && zoneIds.has(d.zone) && d.deviceClass === "light",
   ).length;
 
   if (lightCount === 0) return null;

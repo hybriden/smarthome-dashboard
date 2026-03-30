@@ -44,6 +44,7 @@ export function ZoneControlWidget({ zoneKey }: ZoneControlWidgetProps) {
     const result: { sourceId: string; deviceId: string; capId: string; isOn: boolean }[] = [];
     for (const d of devices.values()) {
       if (d.sourceId !== sourceId || !d.zone || !allZoneIds.has(d.zone)) continue;
+      if (d.deviceClass !== "light") continue;
       const onoff = d.capabilities.find(
         (c) => c.id === "onoff" && c.settable,
       );

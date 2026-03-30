@@ -8,6 +8,7 @@ import { AlarmWidget } from "./AlarmWidget";
 import { CoverWidget } from "./CoverWidget";
 import { GarageDoorWidget } from "./GarageDoorWidget";
 import { LockWidget } from "./LockWidget";
+import { SpeakerWidget } from "./SpeakerWidget";
 import { GenericWidget } from "./GenericWidget";
 
 export interface WidgetProps {
@@ -23,6 +24,7 @@ const WIDGET_MAP: Record<string, ComponentType<WidgetProps>> = {
   windowcoverings: CoverWidget,
   garagedoor: GarageDoorWidget,
   lock: LockWidget,
+  speaker: SpeakerWidget,
 };
 
 export function getWidgetComponent(

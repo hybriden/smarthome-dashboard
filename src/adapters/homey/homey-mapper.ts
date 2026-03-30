@@ -102,6 +102,14 @@ function inferDeviceClass(
     return "solar";
   }
 
+  // AMS / power meter: has Import/Export W readings
+  const hasImportExport = capabilities.some((c) => c.title === "Import" && c.units === "W");
+  if (hasImportExport) return "powermeter";
+
+  // Electricity cost: has cost/pricing capabilities
+  const hasCostCaps = capabilities.some((c) => c.id === "meter_sum_current" || c.id === "meter_sum_month");
+  if (hasCostCaps) return "electricitycost";
+
   if (hasTargetTemp) return "thermostat";
   if (hasDim && hasSettableOnoff) return "light";
   if (hasWindowCoverings) return "windowcoverings";

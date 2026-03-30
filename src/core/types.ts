@@ -33,6 +33,8 @@ export type DeviceClass =
   | "alarm"
   | "garagedoor"
   | "solar"
+  | "powermeter"
+  | "electricitycost"
   | "other";
 
 export interface Zone {

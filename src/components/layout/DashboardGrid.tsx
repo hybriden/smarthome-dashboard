@@ -29,6 +29,10 @@ function widgetSize(item: PinnedItem): { w: number; h: number } {
       return { w: 1, h: 3 };
     case "solar":
       return { w: 1, h: 3 };
+    case "powermeter":
+      return { w: 2, h: 3 };
+    case "electricitycost":
+      return { w: 1, h: 3 };
     case "light":
       return { w: 1, h: 2 };
     case "sensor":

@@ -2,7 +2,9 @@ import { useMemo, useCallback } from "react";
 import { Responsive, WidthProvider, type Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { useDevices } from "@/hooks/useDevices";
+import { Plus, Trash2 } from "lucide-react";
+import { useDeviceStore } from "@/store/devices";
+import { usePinnedDevicesStore } from "@/store/pinnedDevices";
 import { useDashboardStore } from "@/store/dashboard";
 import { getWidgetComponent } from "@/components/widgets/WidgetRegistry";
 import type { Device } from "@/core/types";
@@ -25,10 +27,20 @@ function widgetSize(device: Device): { w: number; h: number } {
 }
 
 export function DashboardGrid() {
-  const activeZone = useDashboardStore((s) => s.activeZone);
+  const allDevices = useDeviceStore((s) => s.devices);
+  const pinned = usePinnedDevicesStore((s) => s.pinned);
+  const removeDevice = usePinnedDevicesStore((s) => s.removeDevice);
+  const setShowPicker = usePinnedDevicesStore((s) => s.setShowDevicePicker);
   const savedLayouts = useDashboardStore((s) => s.layouts);
   const setLayouts = useDashboardStore((s) => s.setLayouts);
-  const devices = useDevices({ zone: activeZone });
+
+  const devices = useMemo(
+    () =>
+      pinned
+        .map((key) => allDevices.get(key))
+        .filter((d): d is Device => d != null),
+    [pinned, allDevices],
+  );
 
   const layouts = useMemo(() => {
     const saved = new Map(savedLayouts.map((l) => [l.i, l]));
@@ -78,13 +90,17 @@ export function DashboardGrid() {
       <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/[0.06] bg-surface-card">
-            <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7">
-              <path d="M12 2L2 9.5V20a2 2 0 002 2h16a2 2 0 002-2V9.5L12 2z" stroke="#4a4440" strokeWidth="1.5" fill="none" />
-              <path d="M9 22V12h6v10" stroke="#4a4440" strokeWidth="1.5" />
-            </svg>
+            <Plus size={24} className="text-muted" />
           </div>
-          <p className="text-sm text-muted">No devices found</p>
-          <p className="mt-1 text-xs text-muted-dark">Connect a data source in Settings</p>
+          <p className="text-sm text-white/70">Your dashboard is empty</p>
+          <p className="mt-1 text-xs text-muted">Add devices to get started</p>
+          <button
+            type="button"
+            onClick={() => setShowPicker(true)}
+            className="mt-4 rounded-xl bg-brand/15 px-6 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand/25"
+          >
+            Add Devices
+          </button>
         </div>
       </div>
     );
@@ -107,10 +123,18 @@ export function DashboardGrid() {
         onLayoutChange={onLayoutChange}
       >
         {devices.map((device) => {
+          const key = `${device.sourceId}:${device.id}`;
           const Widget = getWidgetComponent(device.deviceClass);
           return (
-            <div key={`${device.sourceId}:${device.id}`}>
+            <div key={key} className="group relative">
               <Widget device={device} />
+              <button
+                type="button"
+                onClick={() => removeDevice(key)}
+                className="no-drag absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
+              >
+                <Trash2 size={10} />
+              </button>
             </div>
           );
         })}

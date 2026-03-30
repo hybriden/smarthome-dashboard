@@ -1,15 +1,15 @@
 import { Header } from "./Header";
-import { ZoneTabs } from "./ZoneTabs";
 import { DashboardGrid } from "./DashboardGrid";
 import { SettingsPanel } from "@/components/settings/SettingsPanel";
+import { DevicePicker } from "@/components/settings/DevicePicker";
 
 export function DashboardShell() {
   return (
     <div className="flex h-dvh flex-col">
       <Header />
-      <ZoneTabs />
       <DashboardGrid />
       <SettingsPanel />
+      <DevicePicker />
     </div>
   );
 }

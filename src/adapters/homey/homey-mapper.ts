@@ -33,7 +33,9 @@ function mapCapability(raw: {
   units?: string;
   values?: { id: string; title: string | Record<string, string> | null }[];
 }): Capability {
-  const meta = getCapabilityMeta(raw.id);
+  // Homey uses sub-channel IDs like "onoff.output1" — look up by base capability
+  const baseCapId = raw.id.split(".")[0]!;
+  const meta = getCapabilityMeta(baseCapId);
   return {
     id: raw.id,
     type: (raw.type as Capability["type"]) ?? "string",
@@ -51,17 +53,46 @@ function mapCapability(raw: {
   };
 }
 
+function inferDeviceClass(
+  homeyClass: string,
+  capabilities: Capability[],
+): DeviceClass {
+  const mapped = CLASS_MAP[homeyClass];
+  if (mapped && mapped !== "sensor" && mapped !== "other") return mapped;
+
+  // Infer from capabilities when Homey class is generic
+  const hasSettableOnoff = capabilities.some(
+    (c) => c.id.startsWith("onoff") && c.settable,
+  );
+  const hasDim = capabilities.some((c) => c.id.startsWith("dim"));
+  const hasTargetTemp = capabilities.some((c) =>
+    c.id.startsWith("target_temperature"),
+  );
+  const hasWindowCoverings = capabilities.some((c) =>
+    c.id.startsWith("windowcoverings"),
+  );
+
+  if (hasTargetTemp) return "thermostat";
+  if (hasDim && hasSettableOnoff) return "light";
+  if (hasWindowCoverings) return "windowcoverings";
+  if (hasSettableOnoff) return "socket";
+
+  return mapped ?? "other";
+}
+
 export function mapHomeyDevice(raw: HomeyRawDevice): Device {
+  const capabilities = Object.values(raw.capabilitiesObj ?? {})
+    .filter(Boolean)
+    .map(mapCapability);
+
   return {
     id: raw.id,
     sourceId: "homey",
     name: raw.name,
     zone: raw.zone,
-    deviceClass: CLASS_MAP[raw.class] ?? "other",
+    deviceClass: inferDeviceClass(raw.class, capabilities),
     online: raw.available ?? true,
-    capabilities: Object.values(raw.capabilitiesObj ?? {})
-      .filter(Boolean)
-      .map(mapCapability),
+    capabilities,
   };
 }
 

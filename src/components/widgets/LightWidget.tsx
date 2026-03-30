@@ -3,14 +3,13 @@ import { Toggle } from "@/components/controls/Toggle";
 import { Slider } from "@/components/controls/Slider";
 import { LampIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
-import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function LightWidget({ device }: WidgetProps) {
-  const { capability: onoff, setValue: setOnOff } = useCapability(device, "onoff");
-  const { capability: dim, value: dimValue, setValue: setDim } = useDebouncedCapability(device, "dim");
+  const { capability: onoff, value: onoffValue, setValue: setOnOff } = useCapability(device, "onoff");
+  const { capability: dim, value: dimValue, setValue: setDim } = useCapability(device, "dim", { debounce: 300 });
 
-  const isOn = onoff?.value === true;
+  const isOn = onoffValue === true;
   const brightness = dim ? Math.round((dimValue as number) * 100) : 0;
 
   return (

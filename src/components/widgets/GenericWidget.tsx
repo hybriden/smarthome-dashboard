@@ -5,14 +5,13 @@ import { Slider } from "@/components/controls/Slider";
 import { EnumPicker } from "@/components/controls/EnumPicker";
 import { formatValue } from "@/utils/format";
 import { useCapability } from "@/hooks/useCapability";
-import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
 import { useCardConfigStore } from "@/store/cardConfig";
 import { CardConfigPopover } from "./CardConfigPopover";
 import type { Capability, Device } from "@/core/types";
 import type { WidgetProps } from "./WidgetRegistry";
 
 function SliderRow({ device, cap }: { device: Device; cap: Capability }) {
-  const { value, setValue } = useDebouncedCapability(device, cap.id);
+  const { value, setValue } = useCapability(device, cap.id, { debounce: 300 });
 
   return (
     <div className="no-drag">
@@ -36,14 +35,14 @@ function SliderRow({ device, cap }: { device: Device; cap: Capability }) {
 }
 
 function CapabilityRow({ device, cap }: { device: Device; cap: Capability }) {
-  const { setValue } = useCapability(device, cap.id);
+  const { value, setValue } = useCapability(device, cap.id);
 
   if (cap.type === "boolean" && cap.settable) {
     return (
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted">{cap.title}</span>
         <Toggle
-          checked={cap.value === true}
+          checked={value === true}
           onChange={setValue}
           size="sm"
           disabled={!device.online}
@@ -67,7 +66,7 @@ function CapabilityRow({ device, cap }: { device: Device; cap: Capability }) {
         <span className="mb-1.5 block text-xs text-muted">{cap.title}</span>
         <EnumPicker
           options={cap.options}
-          value={cap.value as string}
+          value={value as string}
           onChange={setValue}
           disabled={!device.online}
         />
@@ -79,7 +78,7 @@ function CapabilityRow({ device, cap }: { device: Device; cap: Capability }) {
     <div className="flex items-center justify-between">
       <span className="text-xs text-muted">{cap.title}</span>
       <span className="text-sm font-medium text-white/70">
-        {formatValue(cap.value, cap.units)}
+        {formatValue(value, cap.units)}
       </span>
     </div>
   );

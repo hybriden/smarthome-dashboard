@@ -3,21 +3,21 @@ import { Slider } from "@/components/controls/Slider";
 import { EnumPicker } from "@/components/controls/EnumPicker";
 import { ThermostatIllustration } from "@/components/illustrations/DeviceIllustrations";
 import { useCapability } from "@/hooks/useCapability";
-import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
 export function ThermostatWidget({ device }: WidgetProps) {
-  const { capability: temp } = useCapability(device, "measure_temperature");
-  const { capability: target, value: targetValue, setValue: setTarget } = useDebouncedCapability(device, "target_temperature", 500);
-  const { capability: mode, setValue: setMode } = useCapability(device, "thermostat_mode");
+  const { value: tempValue } = useCapability(device, "measure_temperature");
+  const { capability: target, value: targetValue, setValue: setTarget } = useCapability(device, "target_temperature", { debounce: 500 });
+  const { capability: mode, value: modeValue, setValue: setMode } = useCapability(device, "thermostat_mode");
 
-  const currentTemp = temp?.value as number | undefined;
+  const currentTemp = tempValue as number | undefined;
   const targetTemp = targetValue as number | undefined;
+  const modeStr = modeValue as string | undefined;
 
   return (
     <WidgetWrapper
       title={device.name}
-      subtitle={mode ? `${(mode.value as string).charAt(0).toUpperCase()}${(mode.value as string).slice(1)} mode` : undefined}
+      subtitle={modeStr ? `${modeStr.charAt(0).toUpperCase()}${modeStr.slice(1)} mode` : undefined}
       online={device.online}
       indicator="on"
     >
@@ -63,7 +63,7 @@ export function ThermostatWidget({ device }: WidgetProps) {
         {mode?.options && (
           <EnumPicker
             options={mode.options}
-            value={mode.value as string}
+            value={modeValue as string}
             onChange={setMode}
             disabled={!device.online}
           />

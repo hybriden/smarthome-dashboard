@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { WidgetWrapper } from "./WidgetWrapper";
 import { Slider } from "@/components/controls/Slider";
-import { useDebouncedCapability } from "@/hooks/useDebouncedCapability";
+import { useCapability } from "@/hooks/useCapability";
 import { manager } from "@/core/manager";
 import type { WidgetProps } from "./WidgetRegistry";
 import { cn } from "@/utils/cn";
@@ -17,18 +17,14 @@ export function SpeakerWidget({ device }: WidgetProps) {
   const track = device.capabilities.find((c) => c.id === "speaker_track");
   const artist = device.capabilities.find((c) => c.id === "speaker_artist");
   const album = device.capabilities.find((c) => c.id === "speaker_album");
-  const playing = device.capabilities.find((c) => c.id === "speaker_playing");
-  const muted = device.capabilities.find((c) => c.id === "volume_mute");
   const group = device.capabilities.find((c) => c.id === "sonos_group");
 
-  const { value: volumeValue, setValue: setVolume } = useDebouncedCapability(
-    device,
-    "volume_set",
-    200,
-  );
+  const { value: playingValue, setValue: setPlaying } = useCapability(device, "speaker_playing");
+  const { value: mutedValue, setValue: setMuted } = useCapability(device, "volume_mute");
+  const { value: volumeValue, setValue: setVolume } = useCapability(device, "volume_set", { debounce: 200 });
 
-  const isPlaying = playing?.value === true;
-  const isMuted = muted?.value === true;
+  const isPlaying = playingValue === true;
+  const isMuted = mutedValue === true;
   const volumePercent = Math.round(((volumeValue as number) ?? 0) * 100);
   const trackName = (track?.value as string) || "Not playing";
   const artistName = artist?.value as string | null;
@@ -78,7 +74,7 @@ export function SpeakerWidget({ device }: WidgetProps) {
         <button
           type="button"
           disabled={!device.online}
-          onClick={() => send("speaker_playing", !isPlaying)}
+          onClick={() => setPlaying(!isPlaying)}
           className={cn(
             "flex h-12 w-12 items-center justify-center rounded-2xl transition-all active:scale-95",
             isPlaying
@@ -108,7 +104,7 @@ export function SpeakerWidget({ device }: WidgetProps) {
         <button
           type="button"
           disabled={!device.online}
-          onClick={() => send("volume_mute", !isMuted)}
+          onClick={() => setMuted(!isMuted)}
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors",
             isMuted

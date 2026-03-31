@@ -124,9 +124,19 @@ input[type="range"]::-moz-range-thumb {
 /* Card glow on hover */
 .widget-card {
   transition: box-shadow 0.3s ease, transform 0.2s ease;
+  max-width: 100%;
 }
 .widget-card:hover {
   box-shadow: 0 0 30px rgba(200, 148, 62, 0.06);
+}
+
+/* Grid item: allow content to expand vertically */
+.react-grid-item {
+  overflow: visible !important;
+}
+.react-grid-item > * {
+  min-height: 100%;
+  max-width: 100%;
 }
 
 /* Equalizer bar animation */

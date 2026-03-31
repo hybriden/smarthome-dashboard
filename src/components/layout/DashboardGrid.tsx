@@ -149,6 +149,7 @@ export function DashboardGrid() {
 
   return (
     <div className="flex-1 overflow-auto px-4 py-2">
+      <div className="mx-auto max-w-[1400px]">
       <ResponsiveGrid
         className="layout"
         layouts={allLayouts}
@@ -166,7 +167,7 @@ export function DashboardGrid() {
         {items.map((item) => {
           if (item.type === "zone") {
             return (
-              <div key={item.key} className="group relative">
+              <div key={item.key} className="group relative h-full">
                 <ZoneControlWidget zoneKey={item.key} />
                 <button
                   type="button"
@@ -181,7 +182,7 @@ export function DashboardGrid() {
 
           const Widget = getWidgetComponent(item.device.deviceClass);
           return (
-            <div key={item.key} className="group relative">
+            <div key={item.key} className="group relative h-full">
               <Widget
                 device={item.device}
                 customName={getCustomName(item.key)}
@@ -198,6 +199,7 @@ export function DashboardGrid() {
           );
         })}
       </ResponsiveGrid>
+      </div>
     </div>
   );
 }

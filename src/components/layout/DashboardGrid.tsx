@@ -68,16 +68,12 @@ export function DashboardGrid() {
     return result;
   }, [pinned, allDevices]);
 
-  const layouts = useMemo(() => {
-    const saved = new Map(savedLayouts.map((l) => [l.i, l]));
+  function generateDefaultLayouts(cols: number): Layout[] {
     let col = 0;
     let row = 0;
     let rowMaxH = 0;
-    const cols = 6;
 
     return items.map((item): Layout => {
-      const existing = saved.get(item.key);
-      if (existing) return existing;
       const size = widgetSize(item);
 
       if (col + size.w > cols) {
@@ -90,22 +86,40 @@ export function DashboardGrid() {
         i: item.key,
         x: col,
         y: row,
-        w: size.w,
+        w: Math.min(size.w, cols),
         h: size.h,
         minW: 1,
         minH: 1,
       };
 
-      col += size.w;
+      col += layout.w;
       rowMaxH = Math.max(rowMaxH, size.h);
       return layout;
     });
+  }
+
+  const allLayouts = useMemo(() => {
+    const colsMap = { lg: 6, md: 4, sm: 2 } as const;
+    const result: Record<string, Layout[]> = {};
+
+    for (const bp of ["lg", "md", "sm"] as const) {
+      const saved = savedLayouts[bp];
+      if (saved && saved.length > 0) {
+        const savedMap = new Map(saved.map((l) => [l.i, l]));
+        // Merge saved with defaults for any new items
+        const defaults = generateDefaultLayouts(colsMap[bp]);
+        result[bp] = defaults.map((d) => savedMap.get(d.i) ?? d);
+      } else {
+        result[bp] = generateDefaultLayouts(colsMap[bp]);
+      }
+    }
+
+    return result;
   }, [items, savedLayouts]);
 
   const onLayoutChange = useCallback(
-    (_current: Layout[], allLayouts: { [key: string]: Layout[] }) => {
-      const lg = allLayouts["lg"] ?? _current;
-      setLayouts(lg);
+    (_current: Layout[], allBreakpointLayouts: { [key: string]: Layout[] }) => {
+      setLayouts(allBreakpointLayouts);
     },
     [setLayouts],
   );
@@ -135,7 +149,7 @@ export function DashboardGrid() {
     <div className="flex-1 overflow-auto px-4 py-2">
       <ResponsiveGrid
         className="layout"
-        layouts={{ lg: layouts, md: layouts, sm: layouts }}
+        layouts={allLayouts}
         breakpoints={{ lg: 1024, md: 768, sm: 0 }}
         cols={{ lg: 6, md: 4, sm: 2 }}
         rowHeight={100}

@@ -118,7 +118,9 @@ export async function handleHomeyCallback(code: string): Promise<HomeyAuthData> 
   const delegationToken = await delegationRes.json() as string;
 
   // Step 4: Create a session on the local Homey using the delegation token
-  const localUrl = homeyLocalUrl || `http://192.168.10.107`;
+  const localUrl = window.location.port === "9999"
+    ? `${window.location.origin}/homey-api`
+    : (homeyLocalUrl || `http://192.168.10.107`);
   const sessionRes = await fetch(`${localUrl}/api/manager/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -210,8 +212,11 @@ export async function refreshHomeyToken(
     if (delegRes.ok) {
       const delegToken = await delegRes.json() as string;
 
+      const refreshLocalUrl = window.location.port === "9999"
+        ? `${window.location.origin}/homey-api`
+        : auth.homeyLocalUrl;
       const sessionRes = await fetch(
-        `${auth.homeyLocalUrl}/api/manager/users/login`,
+        `${refreshLocalUrl}/api/manager/users/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -52,6 +52,9 @@ export class HomeyAdapter implements DataSourceAdapter {
       const manualIp = config["ip"];
       if (manualIp) {
         this.baseUrl = manualIp.startsWith("http") ? manualIp : `http://${manualIp}`;
+      } else if (window.location.port === "9999") {
+        // Deployed on Synology — use nginx reverse proxy to avoid CORS
+        this.baseUrl = `${window.location.origin}/homey-api`;
       } else if (this.auth.homeyLocalUrl) {
         this.baseUrl = this.auth.homeyLocalUrl;
       } else if (this.auth.homeyCloudUrl) {

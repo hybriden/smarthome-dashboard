@@ -29,7 +29,7 @@ function Equalizer() {
   );
 }
 
-export function SpeakerWidget({ device }: WidgetProps) {
+export function SpeakerWidget({ device, customName, onRename }: WidgetProps) {
   const track = device.capabilities.find((c) => c.id === "speaker_track");
   const artist = device.capabilities.find((c) => c.id === "speaker_artist");
   const album = device.capabilities.find((c) => c.id === "speaker_album");
@@ -53,7 +53,8 @@ export function SpeakerWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={groupName ?? "Speaker"}
       online={device.online}
       indicator={isPlaying ? "on" : "off"}

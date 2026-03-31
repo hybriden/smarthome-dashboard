@@ -6,7 +6,7 @@ function findCap(device: { capabilities: { id: string; value: unknown }[] }, id:
   return device.capabilities.find(c => c.id === id)?.value as number | undefined;
 }
 
-export function ElectricityCostWidget({ device }: WidgetProps) {
+export function ElectricityCostWidget({ device, customName, onRename }: WidgetProps) {
   const currentCost = findCap(device, "meter_sum_current");
   const monthlyCost = findCap(device, "meter_sum_month");
   const dailyCost = findCap(device, "meter_sum_day");
@@ -22,7 +22,8 @@ export function ElectricityCostWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={priceNow != null ? `${priceNow.toFixed(2)} NOK/kWh` : "Electricity costs"}
       online={device.online}
       indicator="on"

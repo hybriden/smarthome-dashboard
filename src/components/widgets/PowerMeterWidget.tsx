@@ -77,7 +77,7 @@ function PowerFlow({ importing, exporting }: { importing: number; exporting: num
   );
 }
 
-export function PowerMeterWidget({ device }: WidgetProps) {
+export function PowerMeterWidget({ device, customName, onRename }: WidgetProps) {
   const importW = device.capabilities.find(c => c.title === "Import" && c.units === "W");
   const exportW = device.capabilities.find(c => c.title === "Export" && c.units === "W");
   const importKwh = device.capabilities.find(c => c.title === "Import kwh");
@@ -90,7 +90,8 @@ export function PowerMeterWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={isExporting ? "Exporting to grid" : "Importing from grid"}
       online={device.online}
       indicator={isExporting ? "on" : "off"}

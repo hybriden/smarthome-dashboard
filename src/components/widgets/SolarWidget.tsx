@@ -111,7 +111,7 @@ function SolarIllustration({ watts }: { watts: number }) {
   );
 }
 
-export function SolarWidget({ device }: WidgetProps) {
+export function SolarWidget({ device, customName, onRename }: WidgetProps) {
   // Find capabilities
   const todayEnergy = device.capabilities.find((c) => c.id === "meter_power");
   const lifetimeEnergy = device.capabilities.find((c) => c.id.startsWith("meter_power."));
@@ -124,7 +124,8 @@ export function SolarWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={producing ? "Producing" : "Inactive"}
       online={device.online}
       indicator={producing ? "on" : "off"}

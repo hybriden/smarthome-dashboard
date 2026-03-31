@@ -5,7 +5,7 @@ import { LampIllustration } from "@/components/illustrations/DeviceIllustrations
 import { useCapability } from "@/hooks/useCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
-export function LightWidget({ device }: WidgetProps) {
+export function LightWidget({ device, customName, onRename }: WidgetProps) {
   const { capability: onoff, value: onoffValue, setValue: setOnOff } = useCapability(device, "onoff");
   const { capability: dim, value: dimValue, setValue: setDim } = useCapability(device, "dim", { debounce: 300 });
 
@@ -14,7 +14,8 @@ export function LightWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={isOn ? `${brightness}% brightness` : "Off"}
       online={device.online}
       indicator={isOn ? "on" : "off"}

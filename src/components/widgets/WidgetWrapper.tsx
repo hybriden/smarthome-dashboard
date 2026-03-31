@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState, useRef, useEffect } from "react";
 import { cn } from "@/utils/cn";
 
 interface WidgetWrapperProps {
@@ -8,6 +8,7 @@ interface WidgetWrapperProps {
   indicator?: "on" | "off" | "alarm";
   children: ReactNode;
   className?: string;
+  onRename?: (name: string) => void;
 }
 
 export function WidgetWrapper({
@@ -17,7 +18,28 @@ export function WidgetWrapper({
   indicator,
   children,
   className,
+  onRename,
 }: WidgetWrapperProps) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(title);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) {
+      setDraft(title);
+      // Small delay to ensure the input is rendered
+      requestAnimationFrame(() => inputRef.current?.select());
+    }
+  }, [editing, title]);
+
+  function commit() {
+    const trimmed = draft.trim();
+    if (trimmed && trimmed !== title && onRename) {
+      onRename(trimmed);
+    }
+    setEditing(false);
+  }
+
   return (
     <div
       className={cn(
@@ -28,10 +50,31 @@ export function WidgetWrapper({
     >
       <div className="mb-2 flex items-start justify-between">
         <div className="min-w-0">
-          <h3 className="truncate text-[15px] font-semibold text-white/90">
-            {title}
-          </h3>
-          {subtitle && (
+          {editing ? (
+            <input
+              ref={inputRef}
+              className="no-drag w-full truncate rounded bg-surface-dark/80 px-1.5 py-0.5 text-[15px] font-semibold text-white/90 outline-none ring-1 ring-brand/40 focus:ring-brand/70"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commit();
+                if (e.key === "Escape") setEditing(false);
+              }}
+            />
+          ) : (
+            <h3
+              className={cn(
+                "truncate text-[15px] font-semibold text-white/90",
+                onRename && "no-drag cursor-pointer rounded px-1.5 py-0.5 -mx-1.5 -my-0.5 transition-colors hover:bg-white/[0.04]",
+              )}
+              onDoubleClick={() => onRename && setEditing(true)}
+              title={onRename ? "Double-click to rename" : undefined}
+            >
+              {title}
+            </h3>
+          )}
+          {subtitle && !editing && (
             <p className="mt-0.5 text-xs text-muted">{subtitle}</p>
           )}
         </div>

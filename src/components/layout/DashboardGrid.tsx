@@ -6,6 +6,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useDeviceStore } from "@/store/devices";
 import { usePinnedDevicesStore } from "@/store/pinnedDevices";
 import { useDashboardStore } from "@/store/dashboard";
+import { useCardConfigStore } from "@/store/cardConfig";
 import { getWidgetComponent } from "@/components/widgets/WidgetRegistry";
 import { ZoneControlWidget } from "@/components/widgets/ZoneControlWidget";
 import type { Device } from "@/core/types";
@@ -51,6 +52,8 @@ export function DashboardGrid() {
   const setShowPicker = usePinnedDevicesStore((s) => s.setShowDevicePicker);
   const savedLayouts = useDashboardStore((s) => s.layouts);
   const setLayouts = useDashboardStore((s) => s.setLayouts);
+  const getCustomName = useCardConfigStore((s) => s.getCustomName);
+  const setCustomName = useCardConfigStore((s) => s.setCustomName);
 
   const items = useMemo((): PinnedItem[] => {
     const result: PinnedItem[] = [];
@@ -163,7 +166,11 @@ export function DashboardGrid() {
           const Widget = getWidgetComponent(item.device.deviceClass);
           return (
             <div key={item.key} className="group relative">
-              <Widget device={item.device} />
+              <Widget
+                device={item.device}
+                customName={getCustomName(item.key)}
+                onRename={(name) => setCustomName(item.key, name)}
+              />
               <button
                 type="button"
                 onClick={() => removeDevice(item.key)}

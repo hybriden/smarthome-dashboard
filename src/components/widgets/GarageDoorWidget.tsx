@@ -7,7 +7,7 @@ import { manager } from "@/core/manager";
 import type { WidgetProps } from "./WidgetRegistry";
 import { cn } from "@/utils/cn";
 
-export function GarageDoorWidget({ device }: WidgetProps) {
+export function GarageDoorWidget({ device, customName, onRename }: WidgetProps) {
   const allDevices = useDeviceStore((s) => s.devices);
 
   // Find the matching contact sensor: "Garasjeport Høyre" → "Garasjeport Høyre Sensor"
@@ -67,7 +67,8 @@ export function GarageDoorWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={isOpen ? "Open" : "Closed"}
       online={device.online}
       indicator={isOpen ? "alarm" : "on"}

@@ -31,6 +31,7 @@ function capPriority(capId: string): number {
 export interface CardConfig {
   visibleCaps: string[];
   expanded: boolean;
+  customName?: string;
 }
 
 interface CardConfigState {
@@ -42,6 +43,8 @@ interface CardConfigState {
   setEditing: (deviceKey: string | null) => void;
   isExpanded: (deviceKey: string) => boolean;
   toggleExpanded: (deviceKey: string) => void;
+  getCustomName: (deviceKey: string) => string | undefined;
+  setCustomName: (deviceKey: string, name: string | undefined) => void;
 }
 
 export const useCardConfigStore = create<CardConfigState>((set, get) => ({
@@ -80,6 +83,18 @@ export const useCardConfigStore = create<CardConfigState>((set, get) => ({
     const configs = {
       ...get().configs,
       [deviceKey]: { ...config, visibleCaps: config?.visibleCaps ?? [], expanded: !(config?.expanded ?? false) },
+    };
+    saveJson("card-configs", configs);
+    set({ configs });
+  },
+
+  getCustomName: (deviceKey) => get().configs[deviceKey]?.customName,
+
+  setCustomName: (deviceKey, name) => {
+    const config = get().configs[deviceKey] ?? { visibleCaps: [], expanded: false };
+    const configs = {
+      ...get().configs,
+      [deviceKey]: { ...config, customName: name || undefined },
     };
     saveJson("card-configs", configs);
     set({ configs });

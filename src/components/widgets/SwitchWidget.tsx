@@ -77,7 +77,7 @@ function OnOffToggle({
   );
 }
 
-export function SwitchWidget({ device }: WidgetProps) {
+export function SwitchWidget({ device, customName, onRename }: WidgetProps) {
   const { onoffs, power } = findCaps(device.capabilities);
 
   // Fallback: try exact "onoff" for simple devices
@@ -95,7 +95,8 @@ export function SwitchWidget({ device }: WidgetProps) {
     const isOn = simpleOnoff?.value === true || onoffs[0]?.value === true;
     return (
       <WidgetWrapper
-        title={device.name}
+        title={customName ?? device.name}
+        onRename={onRename}
         subtitle={isOn ? `${formatValue(power.value, power.units)} active` : "Standby"}
         online={device.online}
         indicator={isOn ? "on" : "off"}
@@ -135,7 +136,8 @@ export function SwitchWidget({ device }: WidgetProps) {
   // Toggle-only: garage doors, relays, simple switches without power
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+        onRename={onRename}
       subtitle={anyOn ? "Active" : "Off"}
       online={device.online}
       indicator={anyOn ? "on" : "off"}

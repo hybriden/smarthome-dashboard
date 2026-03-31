@@ -227,7 +227,7 @@ function ThermostatDial({
   );
 }
 
-export function ThermostatWidget({ device }: WidgetProps) {
+export function ThermostatWidget({ device, customName, onRename }: WidgetProps) {
   const { value: tempValue } = useCapability(device, "measure_temperature");
   const {
     capability: target,
@@ -249,7 +249,8 @@ export function ThermostatWidget({ device }: WidgetProps) {
 
   return (
     <WidgetWrapper
-      title={device.name}
+      title={customName ?? device.name}
+      onRename={onRename}
       subtitle={
         modeStr
           ? `${modeStr.charAt(0).toUpperCase()}${modeStr.slice(1)} mode`

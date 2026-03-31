@@ -16,6 +16,8 @@ import { GenericWidget } from "./GenericWidget";
 
 export interface WidgetProps {
   device: Device;
+  customName?: string;
+  onRename?: (name: string) => void;
 }
 
 const WIDGET_MAP: Record<string, ComponentType<WidgetProps>> = {

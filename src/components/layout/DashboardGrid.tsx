@@ -149,7 +149,6 @@ export function DashboardGrid() {
 
   return (
     <div className="flex-1 overflow-auto px-4 py-2">
-      <div className="mx-auto max-w-[1400px]">
       <ResponsiveGrid
         className="layout"
         layouts={allLayouts}
@@ -172,7 +171,7 @@ export function DashboardGrid() {
                 <button
                   type="button"
                   onClick={() => removeDevice(item.key)}
-                  className="no-drag absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
+                  className="no-drag absolute right-2 top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark/80 border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors z-10"
                 >
                   <Trash2 size={10} />
                 </button>
@@ -191,7 +190,7 @@ export function DashboardGrid() {
               <button
                 type="button"
                 onClick={() => removeDevice(item.key)}
-                className="no-drag absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
+                className="no-drag absolute right-2 top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark/80 border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors z-10"
               >
                 <Trash2 size={10} />
               </button>
@@ -199,7 +198,6 @@ export function DashboardGrid() {
           );
         })}
       </ResponsiveGrid>
-      </div>
     </div>
   );
 }

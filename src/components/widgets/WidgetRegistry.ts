@@ -12,6 +12,7 @@ import { SpeakerWidget } from "./SpeakerWidget";
 import { SolarWidget } from "./SolarWidget";
 import { PowerMeterWidget } from "./PowerMeterWidget";
 import { ElectricityCostWidget } from "./ElectricityCostWidget";
+import { EVChargerWidget } from "./EVChargerWidget";
 import { GenericWidget } from "./GenericWidget";
 
 export interface WidgetProps {
@@ -33,6 +34,7 @@ const WIDGET_MAP: Record<string, ComponentType<WidgetProps>> = {
   solar: SolarWidget,
   powermeter: PowerMeterWidget,
   electricitycost: ElectricityCostWidget,
+  evcharger: EVChargerWidget,
 };
 
 export function getWidgetComponent(

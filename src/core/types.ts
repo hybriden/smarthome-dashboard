@@ -35,6 +35,7 @@ export type DeviceClass =
   | "solar"
   | "powermeter"
   | "electricitycost"
+  | "evcharger"
   | "other";
 
 export interface Zone {

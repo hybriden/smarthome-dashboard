@@ -13,6 +13,7 @@ const CLASS_MAP: Record<string, DeviceClass> = {
   camera: "camera",
   homealarm: "alarm",
   garagedoor: "garagedoor",
+  evcharger: "evcharger",
 };
 
 function resolveTitle(title: string | Record<string, string> | null | undefined): string {

@@ -14,7 +14,7 @@ export function AlarmWidget({ device, customName, onRename }: WidgetProps) {
       online={device.online}
       indicator={anyActive ? "alarm" : "on"}
     >
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 min-h-0 items-center justify-center">
         <AlarmIllustration className="h-20 w-20" triggered={anyActive} />
       </div>
       <div className="mt-2 space-y-1.5">

@@ -16,11 +16,11 @@ export function CoverWidget({ device, customName, onRename }: WidgetProps) {
       online={device.online}
       indicator="on"
     >
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 min-h-0 items-center justify-center">
         <BlindsIllustration className="h-20 w-20" openPercent={percent} />
       </div>
       {pos && (
-        <div className="no-drag mt-3">
+        <div className="no-drag mt-2 shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Open</span>
             <Slider

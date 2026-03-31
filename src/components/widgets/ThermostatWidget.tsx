@@ -260,7 +260,7 @@ export function ThermostatWidget({ device, customName, onRename }: WidgetProps) 
       indicator={isHeating ? "on" : "off"}
     >
       {/* Dial */}
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 min-h-0 items-center justify-center">
         <div className="w-full max-w-[180px]">
           <ThermostatDial
             current={currentTemp ?? 0}
@@ -273,7 +273,7 @@ export function ThermostatWidget({ device, customName, onRename }: WidgetProps) 
       </div>
 
       {/* Controls */}
-      <div className="no-drag mt-1 space-y-2">
+      <div className="no-drag mt-1 shrink-0 space-y-2">
         {target && (
           <div className="flex items-center gap-3">
             <span className="text-xs tabular-nums text-muted">

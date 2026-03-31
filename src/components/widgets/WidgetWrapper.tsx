@@ -43,7 +43,7 @@ export function WidgetWrapper({
   return (
     <div
       className={cn(
-        "widget-card relative flex min-h-full flex-col rounded-3xl border border-white/[0.06] bg-surface-card p-4",
+        "widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-4",
         !online && "opacity-50",
         className,
       )}

@@ -101,7 +101,7 @@ export function SwitchWidget({ device, customName, onRename }: WidgetProps) {
         online={device.online}
         indicator={isOn ? "on" : "off"}
       >
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 min-h-0 items-center justify-center">
           <PlugIllustration className="h-20 w-20" glow={isOn} />
         </div>
         <div className="mt-3 flex items-center justify-between">

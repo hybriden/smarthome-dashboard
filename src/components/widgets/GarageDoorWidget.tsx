@@ -74,8 +74,8 @@ export function GarageDoorWidget({ device, customName, onRename }: WidgetProps) 
       indicator={isOpen ? "alarm" : "on"}
     >
       {/* Door illustration */}
-      <div className="flex flex-1 items-center justify-center">
-        <GarageDoorIllustration className="h-20 w-full max-w-[200px]" open={isOpen} />
+      <div className="flex flex-1 min-h-0 items-center justify-center">
+        <GarageDoorIllustration className="h-20 w-full max-w-[200px] max-h-full" open={isOpen} />
       </div>
 
       {/* Sensor info */}

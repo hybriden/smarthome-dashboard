@@ -130,12 +130,12 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 0 30px rgba(200, 148, 62, 0.06);
 }
 
-/* Grid item: allow content to expand vertically */
+/* Grid item containment */
 .react-grid-item {
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 .react-grid-item > * {
-  min-height: 100%;
+  height: 100%;
   max-width: 100%;
 }
 

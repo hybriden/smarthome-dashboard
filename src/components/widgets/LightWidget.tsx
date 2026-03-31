@@ -20,10 +20,10 @@ export function LightWidget({ device, customName, onRename }: WidgetProps) {
       online={device.online}
       indicator={isOn ? "on" : "off"}
     >
-      <div className="flex flex-1 items-center justify-center">
-        <LampIllustration className="h-20 w-20" glow={isOn} />
+      <div className="flex flex-1 min-h-0 items-center justify-center">
+        <LampIllustration className="h-20 w-20 max-h-full" glow={isOn} />
       </div>
-      <div className="mt-3 space-y-3">
+      <div className="mt-2 shrink-0 space-y-2">
         {dim && isOn && (
           <div className="no-drag flex items-center gap-3">
             <div className="rounded-lg bg-surface-dark/60 p-1.5">

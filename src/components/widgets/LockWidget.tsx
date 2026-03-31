@@ -133,7 +133,7 @@ export function LockWidget({ device, customName, onRename }: WidgetProps) {
       online={device.online}
       indicator={lockState === "locked" ? "on" : "alarm"}
     >
-      <div className="flex flex-1 items-center gap-4">
+      <div className="flex flex-1 min-h-0 items-center gap-4">
         {/* Lock illustration */}
         <div className="h-24 w-16 shrink-0">
           <LockIllustration state={lockState} />

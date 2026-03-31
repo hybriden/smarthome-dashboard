@@ -14,7 +14,7 @@ export function SensorWidget({ device, customName, onRename }: WidgetProps) {
       online={device.online}
       indicator="on"
     >
-      <div className="flex flex-1 items-center gap-4">
+      <div className="flex flex-1 min-h-0 items-center gap-4">
         <SensorIllustration className="h-16 w-16 shrink-0" />
         <div className="flex flex-1 flex-col gap-2">
           {readCaps.map((cap) => (

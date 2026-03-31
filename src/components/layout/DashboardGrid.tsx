@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 import { Responsive, WidthProvider, type Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useDeviceStore } from "@/store/devices";
 import { usePinnedDevicesStore } from "@/store/pinnedDevices";
 import { useDashboardStore } from "@/store/dashboard";
@@ -166,34 +166,21 @@ export function DashboardGrid() {
         {items.map((item) => {
           if (item.type === "zone") {
             return (
-              <div key={item.key} className="group relative h-full">
+              <div key={item.key} className="h-full">
                 <ZoneControlWidget zoneKey={item.key} />
-                <button
-                  type="button"
-                  onClick={() => removeDevice(item.key)}
-                  className="no-drag absolute right-2 top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark/80 border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors z-10"
-                >
-                  <Trash2 size={10} />
-                </button>
               </div>
             );
           }
 
           const Widget = getWidgetComponent(item.device.deviceClass);
           return (
-            <div key={item.key} className="group relative h-full">
+            <div key={item.key} className="h-full">
               <Widget
                 device={item.device}
                 customName={getCustomName(item.key)}
                 onRename={(name) => setCustomName(item.key, name)}
+                onRemove={() => removeDevice(item.key)}
               />
-              <button
-                type="button"
-                onClick={() => removeDevice(item.key)}
-                className="no-drag absolute right-2 top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-surface-dark/80 border border-white/[0.08] text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors z-10"
-              >
-                <Trash2 size={10} />
-              </button>
             </div>
           );
         })}

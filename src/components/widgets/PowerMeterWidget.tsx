@@ -268,7 +268,7 @@ function EnergyFlowVisualization({ importing, exporting }: { importing: number; 
   );
 }
 
-export function PowerMeterWidget({ device, customName, onRename }: WidgetProps) {
+export function PowerMeterWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const importW = device.capabilities.find(c => c.title === "Import" && c.units === "W");
   const exportW = device.capabilities.find(c => c.title === "Export" && c.units === "W");
   const importKwh = device.capabilities.find(c => c.title === "Import kwh");
@@ -283,6 +283,7 @@ export function PowerMeterWidget({ device, customName, onRename }: WidgetProps) 
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={isExporting ? "Exporting to grid" : "Importing from grid"}
       online={device.online}
       indicator={isExporting ? "on" : "off"}

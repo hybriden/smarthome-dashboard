@@ -2,7 +2,7 @@ import { WidgetWrapper } from "./WidgetWrapper";
 import { AlarmIllustration } from "@/components/illustrations/DeviceIllustrations";
 import type { WidgetProps } from "./WidgetRegistry";
 
-export function AlarmWidget({ device, customName, onRename }: WidgetProps) {
+export function AlarmWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const alarmCaps = device.capabilities.filter((c) => c.id.startsWith("alarm_"));
   const anyActive = alarmCaps.some((c) => c.value === true);
 
@@ -10,6 +10,7 @@ export function AlarmWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={anyActive ? "Triggered" : "All clear"}
       online={device.online}
       indicator={anyActive ? "alarm" : "on"}

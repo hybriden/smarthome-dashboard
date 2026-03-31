@@ -1,4 +1,5 @@
 import { type ReactNode, useState, useRef, useEffect } from "react";
+import { Trash2 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 interface WidgetWrapperProps {
@@ -9,6 +10,7 @@ interface WidgetWrapperProps {
   children: ReactNode;
   className?: string;
   onRename?: (name: string) => void;
+  onRemove?: () => void;
 }
 
 export function WidgetWrapper({
@@ -19,6 +21,7 @@ export function WidgetWrapper({
   children,
   className,
   onRename,
+  onRemove,
 }: WidgetWrapperProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
@@ -43,7 +46,7 @@ export function WidgetWrapper({
   return (
     <div
       className={cn(
-        "widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-3",
+        "widget-card group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-3",
         !online && "opacity-50",
         className,
       )}
@@ -78,16 +81,27 @@ export function WidgetWrapper({
             <p className="mt-0.5 text-xs text-muted">{subtitle}</p>
           )}
         </div>
-        {indicator && (
-          <span
-            className={cn(
-              "mt-1 h-2.5 w-2.5 shrink-0 rounded-full",
-              indicator === "on" && "bg-brand shadow-[0_0_8px_rgba(200,148,62,0.4)]",
-              indicator === "off" && "bg-muted-dark",
-              indicator === "alarm" && "animate-pulse bg-brand-danger shadow-[0_0_8px_rgba(217,83,79,0.4)]",
-            )}
-          />
-        )}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {onRemove && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="no-drag hidden h-5 w-5 items-center justify-center rounded-full bg-surface-dark/80 text-muted hover:bg-brand-danger/20 hover:text-brand-danger group-hover:flex transition-colors"
+            >
+              <Trash2 size={10} />
+            </button>
+          )}
+          {indicator && (
+            <span
+              className={cn(
+                "h-2.5 w-2.5 rounded-full",
+                indicator === "on" && "bg-brand shadow-[0_0_8px_rgba(200,148,62,0.4)]",
+                indicator === "off" && "bg-muted-dark",
+                indicator === "alarm" && "animate-pulse bg-brand-danger shadow-[0_0_8px_rgba(217,83,79,0.4)]",
+              )}
+            />
+          )}
+        </div>
       </div>
       <div className="flex flex-1 min-h-0 flex-col">{children}</div>
     </div>

@@ -4,7 +4,7 @@ import { BlindsIllustration } from "@/components/illustrations/DeviceIllustratio
 import { useCapability } from "@/hooks/useCapability";
 import type { WidgetProps } from "./WidgetRegistry";
 
-export function CoverWidget({ device, customName, onRename }: WidgetProps) {
+export function CoverWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const { capability: pos, value: posValue, setValue: setPos } = useCapability(device, "windowcoverings_set", { debounce: 300 });
   const percent = pos ? Math.round((posValue as number) * 100) : 0;
 
@@ -12,6 +12,7 @@ export function CoverWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={`${percent}% closed`}
       online={device.online}
       indicator="on"

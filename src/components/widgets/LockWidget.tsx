@@ -89,7 +89,7 @@ function LockIllustration({ state }: { state: LockState }) {
   );
 }
 
-export function LockWidget({ device, customName, onRename }: WidgetProps) {
+export function LockWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   // Find lock capabilities
   const lockEnum = device.capabilities.find((c) => c.id === "lock_unlock_open");
   const lockedBool = device.capabilities.find((c) => c.id === "locked");
@@ -129,6 +129,7 @@ export function LockWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={stateLabel}
       online={device.online}
       indicator={lockState === "locked" ? "on" : "alarm"}

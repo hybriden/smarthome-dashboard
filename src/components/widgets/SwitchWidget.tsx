@@ -77,7 +77,7 @@ function OnOffToggle({
   );
 }
 
-export function SwitchWidget({ device, customName, onRename }: WidgetProps) {
+export function SwitchWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const { onoffs, power } = findCaps(device.capabilities);
 
   // Fallback: try exact "onoff" for simple devices
@@ -97,6 +97,7 @@ export function SwitchWidget({ device, customName, onRename }: WidgetProps) {
       <WidgetWrapper
         title={customName ?? device.name}
         onRename={onRename}
+      onRemove={onRemove}
         subtitle={isOn ? `${formatValue(power.value, power.units)} active` : "Standby"}
         online={device.online}
         indicator={isOn ? "on" : "off"}
@@ -138,6 +139,7 @@ export function SwitchWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
         onRename={onRename}
+      onRemove={onRemove}
       subtitle={anyOn ? "Active" : "Off"}
       online={device.online}
       indicator={anyOn ? "on" : "off"}

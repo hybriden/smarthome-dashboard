@@ -3,13 +3,14 @@ import { SensorIllustration } from "@/components/illustrations/DeviceIllustratio
 import { formatValue } from "@/utils/format";
 import type { WidgetProps } from "./WidgetRegistry";
 
-export function SensorWidget({ device, customName, onRename }: WidgetProps) {
+export function SensorWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const readCaps = device.capabilities.filter((c) => !c.settable);
 
   return (
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={`${readCaps.length} reading${readCaps.length !== 1 ? "s" : ""}`}
       online={device.online}
       indicator="on"

@@ -193,7 +193,7 @@ function ChargerVisualization({ watts, state, currentA, maxA, voltage, phases }:
   );
 }
 
-export function EVChargerWidget({ device, customName, onRename }: WidgetProps) {
+export function EVChargerWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const power = device.capabilities.find(c => c.id === "measure_power");
   const stateEnum = device.capabilities.find(c => c.id === "evcharger_charging_state");
   const voltage = device.capabilities.find(c => c.id === "measure_voltage");
@@ -223,6 +223,7 @@ export function EVChargerWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={meta.label}
       online={device.online}
       indicator={isCharging ? "on" : state === "plugged_out" ? "off" : "on"}

@@ -84,7 +84,7 @@ function CapabilityRow({ device, cap }: { device: Device; cap: Capability }) {
   );
 }
 
-export function GenericWidget({ device, customName, onRename }: WidgetProps) {
+export function GenericWidget({ device, customName, onRename, onRemove }: WidgetProps) {
   const deviceKey = `${device.sourceId}:${device.id}`;
   const allCapIds = device.capabilities.map((c) => c.id);
   const getVisibleCaps = useCardConfigStore((s) => s.getVisibleCaps);
@@ -106,6 +106,7 @@ export function GenericWidget({ device, customName, onRename }: WidgetProps) {
     <WidgetWrapper
       title={customName ?? device.name}
       onRename={onRename}
+      onRemove={onRemove}
       subtitle={device.deviceClass}
       online={device.online}
       indicator={device.online ? "on" : "off"}

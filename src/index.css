@@ -98,9 +98,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @keyframes ambientDrift3 {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.02; }
-  33% { transform: translate(40px, -30px) scale(1.1); opacity: 0.03; }
-  66% { transform: translate(-30px, 20px) scale(0.9); opacity: 0.015; }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.06; }
+  33% { transform: translate(40px, -30px) scale(1.1); opacity: 0.08; }
+  66% { transform: translate(-30px, 20px) scale(0.9); opacity: 0.04; }
 }
 
 /* Card glow on hover */

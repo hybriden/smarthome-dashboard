@@ -43,12 +43,12 @@ export function WidgetWrapper({
   return (
     <div
       className={cn(
-        "widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-4",
+        "widget-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-card p-3",
         !online && "opacity-50",
         className,
       )}
     >
-      <div className="mb-2 flex items-start justify-between">
+      <div className="mb-1 shrink-0 flex items-start justify-between">
         <div className="min-w-0">
           {editing ? (
             <input
@@ -89,7 +89,7 @@ export function WidgetWrapper({
           />
         )}
       </div>
-      <div className="flex flex-1 flex-col">{children}</div>
+      <div className="flex flex-1 min-h-0 flex-col">{children}</div>
     </div>
   );
 }

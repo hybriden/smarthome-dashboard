@@ -240,7 +240,7 @@ export function EVChargerWidget({ device, customName, onRename }: WidgetProps) {
       </div>
 
       {/* Power readout */}
-      <div className="mb-1 text-center">
+      <div className="mb-1 shrink-0 text-center">
         <div className="flex items-center justify-center gap-1.5">
           <Zap size={16} className={isCharging ? "text-brand-success" : "text-muted"} />
           <span className={cn("text-2xl font-bold tabular-nums", isCharging ? "text-white" : "text-muted")}>
@@ -254,7 +254,7 @@ export function EVChargerWidget({ device, customName, onRename }: WidgetProps) {
 
       {/* Current limit slider */}
       {targetCurrent && (
-        <div className="no-drag mb-2 flex items-center gap-3">
+        <div className="no-drag mb-1 shrink-0 flex items-center gap-3">
           <span className="text-[10px] text-muted whitespace-nowrap">{targetCurrent.min ?? 0}A</span>
           <Slider
             value={targetCurrentVal as number}
@@ -270,7 +270,7 @@ export function EVChargerWidget({ device, customName, onRename }: WidgetProps) {
       )}
 
       {/* Stats */}
-      <div className="flex justify-between rounded-xl bg-surface-dark/60 px-3 py-2">
+      <div className="shrink-0 flex justify-between rounded-xl bg-surface-dark/60 px-2 py-1.5">
         <div className="flex items-center gap-1.5">
           <Battery size={10} className="text-brand" />
           <div>

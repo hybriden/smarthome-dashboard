@@ -233,7 +233,7 @@ export function SolarWidget({ device, customName, onRename }: WidgetProps) {
       </div>
 
       {/* Current power — prominent */}
-      <div className="mt-1 text-center">
+      <div className="mt-1 shrink-0 text-center">
         <div className="flex items-center justify-center gap-1.5">
           {producing ? (
             <Sun size={16} className="text-brand" />
@@ -250,7 +250,7 @@ export function SolarWidget({ device, customName, onRename }: WidgetProps) {
       </div>
 
       {/* Stats bar */}
-      <div className="mt-2 flex justify-between rounded-xl bg-surface-dark/60 px-3 py-2">
+      <div className="mt-1 shrink-0 flex justify-between rounded-xl bg-surface-dark/60 px-2 py-1.5">
         <div className="flex items-center gap-1.5">
           <Zap size={10} className="text-brand-success" />
           <div>

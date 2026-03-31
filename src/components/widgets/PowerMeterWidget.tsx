@@ -293,7 +293,7 @@ export function PowerMeterWidget({ device, customName, onRename }: WidgetProps) 
       </div>
 
       {/* Current net power — large */}
-      <div className="mb-2 text-center">
+      <div className="mb-1 shrink-0 text-center">
         <div className="flex items-center justify-center gap-1.5">
           <Zap size={16} className={isExporting ? "text-brand-success" : "text-brand"} />
           <span className={cn("text-2xl font-bold tabular-nums", isExporting ? "text-brand-success" : "text-white")}>
@@ -306,7 +306,7 @@ export function PowerMeterWidget({ device, customName, onRename }: WidgetProps) 
       </div>
 
       {/* Today's energy totals */}
-      <div className="flex justify-between rounded-xl bg-surface-dark/60 px-3 py-2">
+      <div className="shrink-0 flex justify-between rounded-xl bg-surface-dark/60 px-2 py-1.5">
         <div className="flex items-center gap-1.5">
           <ArrowDown size={10} className="text-brand" />
           <div>

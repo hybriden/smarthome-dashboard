@@ -5,12 +5,30 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
   body {
     @apply overscroll-none font-sans;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     background: #0c0b0a;
     color: #c2c2c2;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection in inputs */
+  input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* Hide cursor after 3s of inactivity (kiosk mode) */
+  body.cursor-hidden, body.cursor-hidden * {
+    cursor: none !important;
   }
 
   ::-webkit-scrollbar {

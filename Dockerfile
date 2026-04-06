@@ -13,7 +13,7 @@ RUN apk add --no-cache nginx
 WORKDIR /app
 COPY settings-server.mjs .
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/http.d/default.conf
 RUN mkdir -p /data /run/nginx
 VOLUME /data
 EXPOSE 9999

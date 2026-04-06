@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { initStorage } from "@/utils/storage";
 
 // === Kiosk mode helpers ===
 
@@ -41,8 +42,11 @@ document.addEventListener("touchmove", (e) => {
 
 // === App render ===
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+// Load server settings into localStorage before rendering
+initStorage().finally(() => {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+});
